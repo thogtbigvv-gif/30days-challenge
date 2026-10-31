@@ -27,3 +27,375 @@ h1{margin:4px 0 14px;font-size:30px;letter-spacing:.04em}
 .stats span{font-size:11px;color:var(--mut)}
 .bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;margin:12px 0 6px}
 .bar i{display:block;height:100%;background:var(--accent);width:0}
+.rating{font-size:13px;color:var(--mut);text-align:center}
+.tabs{display:flex;gap:6px;margin-bottom:14px}
+.tabs button{flex:1;padding:9px 0;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--ink);font:inherit;font-size:13px;cursor:pointer}
+.tabs .on{background:var(--accent);color:var(--on);border-color:var(--accent)}
+.v{display:none}.v.on{display:block}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.wd{font-size:10px;text-align:center;color:var(--mut)}
+.day{aspect-ratio:1;border:1px solid var(--line);border-radius:8px;background:color-mix(in srgb,var(--accent) calc(var(--s)*15%),var(--card));color:var(--ink);font:inherit;font-size:13px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0;cursor:pointer}
+.day small{font-size:10px;color:var(--mut)}
+.day.sel{outline:2px solid var(--accent);outline-offset:1px}
+.day.today{border-color:var(--accent);border-width:2px}
+.head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.head h2{margin:0;font-size:18px}
+.head .big{font-size:26px;color:var(--accent)}
+.item{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:11px 0;color:var(--ink);font:inherit;cursor:pointer}
+.item:first-of-type{border-top:0}
+.box{flex:none;width:24px;height:24px;border:2px solid var(--accent);border-radius:6px;display:grid;place-items:center;font-size:15px;color:var(--on)}
+.item.on .box{background:var(--accent)}
+.item.on .t{text-decoration:line-through;opacity:.65}
+.t b{display:block;font-size:13px;letter-spacing:.1em}
+.t span{font-size:13px;color:var(--mut)}
+textarea,input[type=number]{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;font:inherit;font-size:15px}
+textarea{min-height:70px;margin-top:10px;font-size:14px;resize:vertical}
+.nums{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.nums label{font-size:12px;color:var(--mut)}
+.btn{margin:10px 8px 0 0;background:var(--accent);color:var(--on);border:0;border-radius:8px;padding:10px 14px;font:inherit;font-size:14px;cursor:pointer}
+.sec{font-size:11px;letter-spacing:.18em;color:var(--mut);text-transform:uppercase;margin:0 0 10px}
+.tg{margin:12px 0}
+.tg .l{display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px}
+.tg .bar{margin:0}
+.chart{display:flex;align-items:flex-end;gap:2px;height:90px}
+.chart i{flex:1;background:var(--accent);border-radius:2px 2px 0 0;min-height:2px}
+.axis{display:flex;justify-content:space-between;font-size:10px;color:var(--mut);margin-top:4px}
+.tt{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr .8fr;gap:6px;align-items:center;font-size:13px;margin-bottom:8px}
+.tt input{padding:8px 2px;text-align:center;font-size:14px}
+.hd{font-size:11px;color:var(--mut);text-align:center}
+.dl{text-align:center;color:var(--accent);font-size:13px}
+input[type=text]{width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px;font:inherit;font-size:15px}
+.tabs{overflow-x:auto}.tabs button{flex:none;padding:9px 13px}
+.day.fut{opacity:.4}.day.miss{border-style:dashed}.day.full{border-color:var(--accent)}
+.pil{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}.pil .tg{margin:0}.pil .l{font-size:11px}
+.nv{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.nv button{background:none;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 14px;font:inherit;cursor:pointer}
+.lk{font-size:12px;color:var(--mut);margin:8px 0}.ex{font-size:13px;color:var(--mut)}
+.lb{display:block;font-size:12px;color:var(--mut);margin:10px 0 4px}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">November 2026 · The Lock In Project</div>
+  <h1>BUILD YOURSELF.</h1>
+
+  <div class="card">
+    <div class="stats">
+      <div><b id="tot">0</b><span>Сар · /180</span></div>
+      <div><b id="wk">0</b><span id="wkl">7 хоног · /42</span></div>
+      <div><b id="perf">0</b><span>Төгс өдөр · 6/6</span></div>
+    </div>
+    <div class="bar"><i id="barfill"></i></div>
+    <div class="rating" id="rating"></div>
+    <div class="rating" id="dash" style="margin-top:6px"></div>
+    <div class="pil" id="pil"></div>
+  </div>
+
+  <div class="tabs"><button>Өдөр</button><button>Бэлтгэл</button><button>Сургалт</button><button>Journal</button><button>Baseline</button><button>Ахиц</button></div>
+
+  <section class="v" id="v0">
+    <div class="card">
+      <p class="sec">30 хоног</p>
+      <div class="grid" id="wds"></div>
+      <div class="grid" id="cal" style="margin-top:6px"></div>
+    </div>
+    <div class="card" id="panel"></div>
+  </section>
+
+  <section class="v" id="v3"><div class="card" id="fit"></div><div class="card" id="fhist"></div></section>
+  <section class="v" id="v4"><div class="card" id="jap"></div><div class="card" id="rd"></div></section>
+  <section class="v" id="v5"><div class="card" id="jr"></div></section>
+  <section class="v" id="v1">
+    <div class="card" id="test"></div>
+  </section>
+
+  <section class="v" id="v2">
+    <div class="card" id="targets"></div>
+    <div class="card" id="chartc"></div>
+    <div class="card" id="an"></div>
+    <div class="card">
+      <p class="sec">Backup</p>
+      <div class="rating" style="text-align:left">Өгөгдөл зөвхөн энэ browser дээр хадгалагдана. Утас солих, browser цэвэрлэхийн өмнө backup хий.</div>
+      <button class="btn" id="bk">Backup хуулах</button><button class="btn" id="rs">Сэргээх</button>
+    </div>
+  </section>
+</main>
+
+<script>
+var KEY = 'lockin-nov-2026';
+var S = {};
+try { S = clean(JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { S = {}; }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function $(id) { return document.getElementById(id); }
+
+var P = [
+  { n: 'GLOW UP', d: 'Өглөө, оройн арчилгаа, хувийн цэвэр байдал' },
+  { n: 'FITNESS', d: '' },
+  { n: 'JAPANESE', d: '60 минутын сургалт' },
+  { n: 'MENTAL', d: 'Journal, reflection' },
+  { n: 'LIFESTYLE', d: 'Нойр, хоол, орчны цэгцтэй байдал' },
+  { n: 'READING', d: '10-аас дээш хуудас' }
+];
+var FIT = ['Rest — бүрэн сэргэлт', 'Strength A — цээж, мөр, трицепс', 'Cardio — 30–35 мин', 'Strength B — нуруу, мөр, core', 'Mobility + Recovery', 'Strength C — full body', 'Cardio — 40–50 мин'];
+var DN = ['Ням', 'Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан', 'Бямба'];
+var WD = ['Да', 'Мя', 'Лх', 'Пү', 'Ба', 'Бя', 'Ня'];
+var MET = [['w', 'Жин (кг)'], ['p', 'Push-up'], ['pl', 'Plank (сек)'], ['sq', 'Squat 1 мин'], ['js', 'Япон яриа (сек)']];
+var PH = [['b', 'Nov 1'], ['m', 'Nov 15'], ['f', 'Nov 30']];
+
+var now = new Date();
+var todayN = (now.getFullYear() === 2026 && now.getMonth() === 10) ? now.getDate() : 0;
+var cur = (now.getFullYear() < 2026 || (now.getFullYear() === 2026 && now.getMonth() < 10)) ? 0 : (now.getFullYear() === 2026 && now.getMonth() === 10 ? now.getDate() : 30);
+var sel = cur || 1, tab = 0;
+
+function dow(d) { return new Date(2026, 10, d).getDay(); }
+function done(d) { return (S[d] && S[d].done) || []; }
+function sc(d) { return done(d).length; }
+function day(d) { S[d] = S[d] || { done: [] }; S[d].done = S[d].done || []; return S[d]; }
+function addDone(i) { var x = day(sel); if (x.done.indexOf(i) < 0) x.done.push(i); }
+
+function stats() {
+  var tot = 0, perf = 0, last = 0;
+  for (var k = 1; k <= 30; k++) { tot += sc(k); if (sc(k) === 6) perf++; if (sc(k) > 0) last = k; }
+  var w = sel <= 28 ? Math.ceil(sel / 7) : 5;
+  var a = (w - 1) * 7 + 1, b = Math.min(w * 7, 30), wt = 0;
+  for (var j = a; j <= b; j++) wt += sc(j);
+  $('tot').textContent = tot;
+  $('wk').textContent = wt;
+  $('wkl').textContent = 'Nov ' + a + '–' + b + ' · /' + (b - a + 1) * 6;
+  $('perf').textContent = perf;
+  $('barfill').style.width = (tot / 180 * 100) + '%';
+  var r = '—';
+  if (last) {
+    var p = tot / (last * 6);
+    r = p >= 0.9 ? 'Excellent' : p >= 0.8 ? 'Strong' : p >= 0.667 ? 'Moderate' : 'Needs improvement';
+    r = 'Одоогийн хурд: ' + r + ' (' + Math.round(p * 100) + '%)';
+  }
+  $('rating').textContent = r;
+}
+
+function calendar() {
+  $('wds').innerHTML = WD.map(function (w) { return '<div class="wd">' + w + '</div>'; }).join('');
+  var h = '';
+  for (var i = 0; i < (dow(1) + 6) % 7; i++) h += '<div></div>';
+  for (var d = 1; d <= 30; d++) {
+    h += '<button class="day' + (d === sel ? ' sel' : '') + (d === todayN ? ' today' : '') + (d > cur ? ' fut' : sc(d) === 6 ? ' full' : sc(d) === 0 ? ' miss' : '') + '" style="--s:' + sc(d) + '" data-d="' + d + '">' + d + '<small>' + sc(d) + '/6</small></button>';
+  }
+  $('cal').innerHTML = h;
+  $('cal').querySelectorAll('.day').forEach(function (b) {
+    b.onclick = function () { sel = +b.dataset.d; render(); };
+  });
+}
+
+function panel() {
+  var dn = done(sel), x = S[sel] || {};
+  var items = P.map(function (p, i) {
+    var desc = i === 1 ? 'Өнөөдөр: ' + FIT[dow(sel)] : p.d;
+    var on = dn.indexOf(i) > -1;
+    return '<button class="item' + (on ? ' on' : '') + '" data-i="' + i + '" aria-pressed="' + on + '"><span class="box">' + (on ? '✓' : '') + '</span><span class="t"><b>' + p.n + '</b><span>' + desc + '</span></span></button>';
+  }).join('');
+  $('panel').innerHTML = '<div class="head"><h2>November ' + sel + ' · ' + DN[dow(sel)] + '</h2><span class="big">' + dn.length + '/6</span></div>' + items +
+    '<div class="nums"><div><label>Япон хэл (минут)</label><input type="number" inputmode="numeric" min="0" id="jp"></div>' +
+    '<div><label>Уншсан хуудас</label><input type="number" inputmode="numeric" min="0" id="pg"></div></div>' +
+    '<textarea id="note" placeholder="Өдрийн тэмдэглэл"></textarea><button class="btn" id="copy">Өдрийн тайлан хуулах</button>';
+  $('jp').value = x.jp || '';
+  $('pg').value = x.pg || '';
+  $('note').value = x.note || '';
+  $('note').oninput = function (e) { day(sel).note = e.target.value; save(); };
+  $('jp').onchange = function (e) { var v = +e.target.value || 0; day(sel).jp = v; if (v >= 60) addDone(2); save(); render(); };
+  $('pg').onchange = function (e) { var v = +e.target.value || 0; day(sel).pg = v; if (v >= 10) addDone(5); save(); render(); };
+  $('panel').querySelectorAll('.item').forEach(function (el) {
+    el.onclick = function () {
+      var i = +el.dataset.i, arr = day(sel).done, at = arr.indexOf(i);
+      if (at > -1) arr.splice(at, 1); else arr.push(i);
+      save(); render();
+    };
+  });
+  $('copy').onclick = function () {
+    var dd = done(sel);
+    var t = 'Nov ' + sel + ' — ' + dd.length + '/6\n' + P.map(function (p, i) { return (dd.indexOf(i) > -1 ? '✓ ' : '✗ ') + p.n; }).join('\n');
+    if (x.jp) t += '\nЯпон: ' + x.jp + ' мин';
+    if (x.pg) t += '\nУншсан: ' + x.pg + ' хуудас';
+    if (x.note) t += '\n\n' + x.note;
+    copy(t, $('copy'));
+  };
+  lk('panel', 'input,textarea,.item');
+}
+
+function copy(t, btn) {
+  var o = btn.textContent;
+  try {
+    navigator.clipboard.writeText(t).then(function () { btn.textContent = 'Хууллаа ✓'; setTimeout(function () { btn.textContent = o; }, 1500); }, function () { btn.textContent = 'Хуулах боломжгүй'; });
+  } catch (e) { btn.textContent = 'Хуулах боломжгүй'; }
+}
+
+function test() {
+  var M = S.m || {};
+  var h = '<p class="sec">Baseline · Midpoint · Final</p><div class="tt"><div></div>' +
+    PH.map(function (p) { return '<div class="hd">' + p[1] + '</div>'; }).join('') + '<div class="hd">Δ</div></div>';
+  MET.forEach(function (m) {
+    var b = parseFloat(M['b' + m[0]]), f = parseFloat(M['f' + m[0]]);
+    var dl = (isNaN(b) || isNaN(f)) ? '—' : ((f - b > 0 ? '+' : '') + Math.round((f - b) * 10) / 10);
+    h += '<div class="tt"><div>' + m[1] + '</div>' + PH.map(function (p) {
+      return '<input type="number" inputmode="decimal" data-k="' + p[0] + m[0] + '" value="' + (M[p[0] + m[0]] || '') + '">';
+    }).join('') + '<div class="dl">' + dl + '</div></div>';
+  });
+  h += '<div class="rating" style="text-align:left;margin-top:6px">Ижил нөхцөл, зөв техникээр хэм. Push-up, plank-ийг хамгийн их үзүүлэлтээр бич.</div>';
+  $('test').innerHTML = h;
+  $('test').querySelectorAll('input').forEach(function (el) {
+    el.onchange = function () { S.m = S.m || {}; S.m[el.dataset.k] = el.value; save(); render(); };
+  });
+}
+
+function progress() {
+  var jp = 0, pg = 0, st = 0, ca = 0, jn = 0;
+  for (var d = 1; d <= 30; d++) {
+    var x = S[d]; if (!x) continue;
+    jp += +x.jp || 0; pg += +x.pg || 0;
+    var dn = x.done || [], w = dow(d);
+    if (dn.indexOf(1) > -1) { if (w === 1 || w === 3 || w === 5) st++; else if (w === 2 || w === 6) ca++; }
+    if (dn.indexOf(3) > -1) jn++;
+  }
+  var T = [['Japanese (цаг)', Math.round(jp / 6) / 10, 30], ['Reading (хуудас)', pg, 300], ['Strength', st, 12], ['Cardio', ca, 8], ['Journal', jn, 30]];
+  $('targets').innerHTML = '<p class="sec">30 хоногийн зорилт</p>' + T.map(function (t) {
+    return '<div class="tg"><div class="l"><span>' + t[0] + '</span><span>' + t[1] + ' / ' + t[2] + '</span></div><div class="bar"><i style="width:' + Math.min(100, t[1] / t[2] * 100) + '%"></i></div></div>';
+  }).join('');
+  var c = '';
+  for (var k = 1; k <= 30; k++) c += '<i title="Nov ' + k + ': ' + sc(k) + '/6" style="height:' + (sc(k) / 6 * 100) + '%"></i>';
+  $('chartc').innerHTML = '<p class="sec">Өдөр бүрийн оноо</p><div class="chart">' + c + '</div><div class="axis"><span>1</span><span>10</span><span>20</span><span>30</span></div>';
+}
+
+function render() {
+  document.querySelectorAll('.tabs button').forEach(function (b, i) {
+    b.className = i === tab ? 'on' : '';
+    b.onclick = function () { tab = i; render(); };
+  });
+  ['v0', 'v3', 'v4', 'v5', 'v1', 'v2'].forEach(function (id, i) { $(id).className = 'v' + (i === tab ? ' on' : ''); });
+  stats(); dash(); calendar(); panel(); fitness(); study(); journal(); test(); progress(); analytics();
+}
+
+function clean(o) {
+  var r = {};
+  if (!o || typeof o !== 'object' || Array.isArray(o)) return r;
+  function n(v) { v = +v; return isFinite(v) && v >= 0 ? v : 0; }
+  function s(v) { return typeof v === 'string' ? v.slice(0, 4000) : ''; }
+  for (var d = 1; d <= 30; d++) {
+    var x = o[d]; if (!x || typeof x !== 'object') continue;
+    var y = { done: [] };
+    (Array.isArray(x.done) ? x.done : []).forEach(function (i) { i = +i; if (i >= 0 && i <= 5 && i % 1 === 0 && y.done.indexOf(i) < 0) y.done.push(i); });
+    ['jp', 'pg', 'fn'].forEach(function (k) { if (x[k] !== undefined) y[k] = n(x[k]); });
+    ['note', 'jg', 'jv', 'rn', 'fl'].forEach(function (k) { if (x[k]) y[k] = s(x[k]); });
+    if (Array.isArray(x.jm)) y.jm = [0, 1, 2, 3].map(function (i) { return n(x.jm[i]); });
+    if (Array.isArray(x.j)) y.j = [0, 1, 2, 3, 4].map(function (i) { return s(x.j[i]); });
+    r[d] = y;
+  }
+  if (o.m && typeof o.m === 'object') { r.m = {}; for (var k in o.m) if (/^[bmf](w|p|pl|sq|js)$/.test(k)) r.m[k] = String(o.m[k]).slice(0, 10); }
+  if (o.bk && typeof o.bk === 'object') r.bk = { t: s(o.bk.t).slice(0, 200), tot: n(o.bk.tot), cur: n(o.bk.cur) };
+  return r;
+}
+var EX = ['Бүрэн сэргэлт, хөнгөн алхалт', 'Push-ups 3×12–18 · Pike push-ups 3×6–10 · Diamond 2×8–12 · Squat 3×15–20 · Plank 3×40–60с', 'Хөнгөн гүйлт 30–35 мин', 'Backpack rows 4×12–15 · Reverse fly 3×12 · Reverse snow angels 3×12–15 · Dead bug 3×12 · Side plank 2×30с · Superman 3×20–30с', 'Mobility 20–30 мин, зөөлөн суналт', 'Push-ups 3×12–15 · Bulgarian split squat 3×10 · Rows 3×12 · Glute bridge 3×15–20 · Mountain climbers 3×20 · Plank 3×45с', 'Хурдан алхалт эсвэл хөнгөн гүйлт 40–50 мин'];
+var Q = ['Өнөөдөр би юу амжуулсан бэ?', 'Юуг илүү сайн хийж болох байсан бэ?', 'Өнөөдөр ямар шинэ зүйл сурсан бэ?', 'Миний өнөөдрийн хамгийн зөв шийдвэр юу байв?', 'Маргааш юуг сайжруулах вэ?'];
+var WK = [[1, 7], [8, 14], [15, 21], [22, 28], [29, 30]];
+function row(a, b) { return '<div class="tg"><div class="l"><span>' + a + '</span><span>' + b + '</span></div></div>'; }
+function bar(l, v, m, t) { return '<div class="tg"><div class="l"><span>' + l + '</span><span>' + (t || v + ' / ' + m) + '</span></div><div class="bar"><i style="width:' + Math.min(100, m ? v / m * 100 : 0) + '%"></i></div></div>'; }
+function nv() { return '<div class="nv"><button data-n="-1" aria-label="Өмнөх өдөр">‹</button><b>Nov ' + sel + ' · ' + DN[dow(sel)] + '</b><button data-n="1" aria-label="Дараагийн өдөр">›</button></div>'; }
+function wire(id) { $(id).querySelectorAll('.nv button').forEach(function (b) { b.onclick = function () { sel = Math.min(30, Math.max(1, sel + +b.dataset.n)); render(); }; }); }
+function lk(id, q) {
+  if (sel <= cur) return;
+  $(id).querySelectorAll(q).forEach(function (e) { e.disabled = true; });
+  $(id).insertAdjacentHTML('afterbegin', '<div class="lk">🔒 Ирээдүйн өдөр — зөвхөн харах</div>');
+}
+function bind(id, get, set, num) {
+  var e = $(id); e.value = get() || '';
+  e[num ? 'onchange' : 'oninput'] = function () { var v = num ? (+e.value || 0) : e.value; set(v); save(); if (num) render(); };
+}
+function sumWk(a, b, k) { var t = 0; for (var d = a; d <= b; d++) t += (S[d] && +S[d][k]) || 0; return t; }
+function streak() { var s = 0; for (var d = cur; d >= 1; d--) { if (sc(d) >= 4) s++; else if (d !== cur) break; } return s; }
+function pbars() {
+  var pc = [0, 0, 0, 0, 0, 0], el = Math.max(cur, 1);
+  for (var d = 1; d <= 30; d++) done(d).forEach(function (i) { pc[i]++; });
+  return P.map(function (p, i) { return bar(p.n, pc[i], el, pc[i] + ' / ' + cur); }).join('');
+}
+function dash() {
+  var t = 0; for (var d = 1; d <= 30; d++) t += sc(d);
+  $('dash').textContent = cur ? now.getFullYear() + '.' + (now.getMonth() + 1) + '.' + now.getDate() + ' · Өдөр ' + cur + ' / 30 · Streak ' + streak() + ' (≥4/6) · Гүйцэтгэл ' + Math.round(t / 180 * 100) + '%' : 'Challenge November 1-нд эхэлнэ';
+  $('pil').innerHTML = pbars();
+}
+function fitness() {
+  var x = S[sel] || {}, w = dow(sel);
+  $('fit').innerHTML = nv() + '<p class="sec">' + FIT[w] + '</p><div class="ex">' + EX[w] + '</div>' +
+    '<label class="lb" for="fn">Үзүүлэлт (нийт давталт эсвэл минут)</label><input class="dd" type="number" inputmode="decimal" min="0" id="fn">' +
+    '<label class="lb" for="fl">Дасгалын тэмдэглэл (сет × давталт, ачаалал)</label><textarea class="dd" id="fl"></textarea>';
+  wire('fit');
+  bind('fn', function () { return x.fn; }, function (v) { day(sel).fn = v; }, 1);
+  bind('fl', function () { return x.fl; }, function (v) { day(sel).fl = v; });
+  lk('fit', '.dd');
+  var g = {}, rows = '';
+  for (var d = 1; d <= 30; d++) if (S[d] && S[d].fn > 0) { var k = FIT[dow(d)].split(' — ')[0]; (g[k] = g[k] || []).push(S[d].fn); }
+  for (var k2 in g) { var a = g[k2], df = a[a.length - 1] - a[0]; rows += row(k2 + ' (' + a.length + ')', a[0] + ' → ' + a[a.length - 1] + ' (' + (df > 0 ? '+' : '') + df + ')'); }
+  $('fhist').innerHTML = '<p class="sec">Долоо хоногийн хуваарь</p>' + [1, 2, 3, 4, 5, 6, 0].map(function (i) { return row(DN[i], FIT[i].split(' — ')[0]); }).join('') +
+    '<p class="sec" style="margin-top:14px">Үзүүлэлтийн өөрчлөлт</p>' + (rows || '<div class="lk">Одоогоор үзүүлэлт бүртгээгүй байна.</div>');
+}
+function study() {
+  var x = S[sel] || {}, jm = x.jm || [], jt = 0, rt = 0, b = S.bk || {};
+  for (var d = 1; d <= 30; d++) { jt += (S[d] && S[d].jp) || 0; rt += (S[d] && S[d].pg) || 0; }
+  var parts = ['Grammar', 'Vocab / Kanji', 'Listening', 'Speaking / Writing'].map(function (n, i) { return '<div><label class="lb" for="jm' + i + '">' + n + ' (15)</label><input class="dd" type="number" inputmode="numeric" min="0" id="jm' + i + '"></div>'; }).join('');
+  $('jap').innerHTML = nv() + '<p class="sec">Japanese · ' + (x.jp || 0) + ' / 60 мин</p><div class="nums">' + parts + '</div>' +
+    '<label class="lb" for="jg">Судалсан дүрэм</label><textarea class="dd" id="jg"></textarea>' +
+    '<label class="lb" for="jv">Шинэ үг, kanji</label><textarea class="dd" id="jv"></textarea><div style="margin-top:12px"></div>' +
+    bar('Сарын нийт (цаг)', Math.round(jt / 6) / 10, 30) + WK.map(function (w, i) { return row('Week ' + (i + 1) + ' · Nov ' + w[0] + '–' + w[1], Math.round(sumWk(w[0], w[1], 'jp') / 6) / 10 + ' цаг'); }).join('');
+  wire('jap');
+  [0, 1, 2, 3].forEach(function (i) {
+    bind('jm' + i, function () { return jm[i]; }, function (v) { var y = day(sel); y.jm = y.jm || [0, 0, 0, 0]; y.jm[i] = v; y.jp = y.jm.reduce(function (p, c) { return p + c; }, 0); if (y.jp >= 60) addDone(2); }, 1);
+  });
+  bind('jg', function () { return x.jg; }, function (v) { day(sel).jg = v; });
+  bind('jv', function () { return x.jv; }, function (v) { day(sel).jv = v; });
+  lk('jap', '.dd');
+  var pr = b.tot ? Math.min(100, Math.round((b.cur || 0) / b.tot * 100)) : 0;
+  function bk(k, v) { S.bk = S.bk || { t: '', tot: 0, cur: 0 }; S.bk[k] = v; }
+  $('rd').innerHTML = '<p class="sec">Reading · ' + pr + '%</p>' +
+    '<label class="lb" for="bt">Номын нэр</label><input type="text" id="bt">' +
+    '<div class="nums"><div><label class="lb" for="btot">Нийт хуудас</label><input type="number" inputmode="numeric" min="0" id="btot"></div><div><label class="lb" for="bcur">Одоогийн хуудас</label><input type="number" inputmode="numeric" min="0" id="bcur"></div></div>' +
+    '<label class="lb" for="rpg">Өнөөдөр уншсан хуудас (зорилт 10+)</label><input class="dd" type="number" inputmode="numeric" min="0" id="rpg">' +
+    '<label class="lb" for="rn">Тэмдэглэл, чухал санаа, ишлэл</label><textarea class="dd" id="rn"></textarea><div style="margin-top:12px"></div>' +
+    bar('Номын явц', b.cur || 0, b.tot || 0, pr + '%') + bar('Сарын хуудас', rt, 300) +
+    WK.map(function (w, i) { return row('Week ' + (i + 1), sumWk(w[0], w[1], 'pg') + ' хуудас'); }).join('');
+  bind('bt', function () { return b.t; }, function (v) { bk('t', v.slice(0, 200)); });
+  bind('btot', function () { return b.tot; }, function (v) { bk('tot', v); }, 1);
+  bind('bcur', function () { return b.cur; }, function (v) { bk('cur', v); }, 1);
+  bind('rpg', function () { return x.pg; }, function (v) { day(sel).pg = v; if (v >= 10) addDone(5); }, 1);
+  bind('rn', function () { return x.rn; }, function (v) { day(sel).rn = v; });
+  lk('rd', '.dd');
+}
+function journal() {
+  var x = S[sel] || {}, j = x.j || [], n = 0;
+  for (var d = 1; d <= 30; d++) if (S[d] && S[d].j && S[d].j.join('').trim()) n++;
+  $('jr').innerHTML = nv() + '<p class="sec">Journal · ' + n + ' / 30</p>' + Q.map(function (q, i) { return '<label class="lb" for="q' + i + '">' + (i + 1) + '. ' + q + '</label><textarea class="dd" id="q' + i + '"></textarea>'; }).join('');
+  wire('jr');
+  Q.forEach(function (q, i) { bind('q' + i, function () { return j[i]; }, function (v) { var y = day(sel); y.j = y.j || ['', '', '', '', '']; y.j[i] = v; }); });
+  lk('jr', '.dd');
+}
+function analytics() {
+  var q = 0, b = S.bk || {};
+  for (var d = 1; d <= cur; d++) if (sc(d) >= 4) q++;
+  $('an').innerHTML = '<p class="sec">Долоо хоног тус бүр</p>' + WK.map(function (w, i) { var s = 0; for (var e = w[0]; e <= w[1]; e++) s += sc(e); return bar('Week ' + (i + 1), s, (w[1] - w[0] + 1) * 6); }).join('') +
+    '<p class="sec" style="margin-top:14px">Pillar-уудын харьцуулалт</p>' + pbars() + bar('Тогтвортой байдал (≥4/6)', q, Math.max(cur, 1), q + ' / ' + cur + ' өдөр');
+}
+
+$('bk').onclick = function () { copy(JSON.stringify(S), $('bk')); };
+$('rs').onclick = function () {
+  var t = prompt('Backup-аа энд paste хий');
+  if (!t) return;
+  try {
+    var o = JSON.parse(t), c = clean(o);
+    if (!Object.keys(c).length && Object.keys(o).length) throw 0;
+    if (!confirm('Одоогийн өгөгдлийг солих уу?')) return;
+    S = c; save(); render();
+  } catch (e) { alert('Backup буруу байна'); }
+};
+
+render();
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function () {}); }
+</script>
+</body>
+</html>
