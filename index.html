@@ -143,10 +143,15 @@ var WD = ['Да', 'Мя', 'Лх', 'Пү', 'Ба', 'Бя', 'Ня'];
 var MET = [['w', 'Жин (кг)'], ['p', 'Push-up'], ['pl', 'Plank (сек)'], ['sq', 'Squat 1 мин'], ['js', 'Япон яриа (сек)']];
 var PH = [['b', 'Nov 1'], ['m', 'Nov 15'], ['f', 'Nov 30']];
 
-var now = new Date();
-var todayN = (now.getFullYear() === 2026 && now.getMonth() === 10) ? now.getDate() : 0;
-var cur = (now.getFullYear() < 2026 || (now.getFullYear() === 2026 && now.getMonth() < 10)) ? 0 : (now.getFullYear() === 2026 && now.getMonth() === 10 ? now.getDate() : 30);
-var sel = cur || 1, tab = 0;
+var now, todayN, cur, sel, tab = 0;
+function clock() {
+  now = new Date();
+  var y = now.getFullYear(), m = now.getMonth();
+  todayN = (y === 2026 && m === 10) ? now.getDate() : 0;
+  cur = (y < 2026 || (y === 2026 && m < 10)) ? 0 : (y === 2026 && m === 10 ? now.getDate() : 30);
+}
+clock();
+sel = cur || 1;
 
 function dow(d) { return new Date(2026, 10, d).getDay(); }
 function done(d) { return (S[d] && S[d].done) || []; }
@@ -166,8 +171,9 @@ function stats() {
   $('perf').textContent = perf;
   $('barfill').style.width = (tot / 180 * 100) + '%';
   var r = '—';
-  if (last) {
-    var p = tot / (last * 6);
+  var el = cur - (cur && sc(cur) === 0 ? 1 : 0);
+  if (el > 0) {
+    var p = tot / (el * 6);
     r = p >= 0.9 ? 'Excellent' : p >= 0.8 ? 'Strong' : p >= 0.667 ? 'Moderate' : 'Needs improvement';
     r = 'Одоогийн хурд: ' + r + ' (' + Math.round(p * 100) + '%)';
   }
@@ -179,7 +185,7 @@ function calendar() {
   var h = '';
   for (var i = 0; i < (dow(1) + 6) % 7; i++) h += '<div></div>';
   for (var d = 1; d <= 30; d++) {
-    h += '<button class="day' + (d === sel ? ' sel' : '') + (d === todayN ? ' today' : '') + (d > cur ? ' fut' : sc(d) === 6 ? ' full' : sc(d) === 0 ? ' miss' : '') + '" style="--s:' + sc(d) + '" data-d="' + d + '">' + d + '<small>' + sc(d) + '/6</small></button>';
+    h += '<button class="day' + (d === sel ? ' sel' : '') + (d === todayN ? ' today' : '') + (d > cur ? ' fut' : sc(d) === 6 ? ' full' : sc(d) === 0 && d < cur ? ' miss' : '') + '" style="--s:' + sc(d) + '" data-d="' + d + '">' + d + '<small>' + sc(d) + '/6</small></button>';
   }
   $('cal').innerHTML = h;
   $('cal').querySelectorAll('.day').forEach(function (b) {
@@ -195,15 +201,13 @@ function panel() {
     return '<button class="item' + (on ? ' on' : '') + '" data-i="' + i + '" aria-pressed="' + on + '"><span class="box">' + (on ? '✓' : '') + '</span><span class="t"><b>' + p.n + '</b><span>' + desc + '</span></span></button>';
   }).join('');
   $('panel').innerHTML = '<div class="head"><h2>November ' + sel + ' · ' + DN[dow(sel)] + '</h2><span class="big">' + dn.length + '/6</span></div>' + items +
-    '<div class="nums"><div><label>Япон хэл (минут)</label><input type="number" inputmode="numeric" min="0" id="jp"></div>' +
-    '<div><label>Уншсан хуудас</label><input type="number" inputmode="numeric" min="0" id="pg"></div></div>' +
-    '<textarea id="note" placeholder="Өдрийн тэмдэглэл"></textarea><button class="btn" id="copy">Өдрийн тайлан хуулах</button>';
-  $('jp').value = x.jp || '';
-  $('pg').value = x.pg || '';
+    '<div class="nums"><div><label for="jp">Япон хэл (минут)</label><input type="number" inputmode="numeric" min="0" id="jp"></div>' +
+    '<div><label for="pg">Уншсан хуудас</label><input type="number" inputmode="numeric" min="0" id="pg"></div></div>' +
+    '<textarea id="note" aria-label="Тэмдэглэл" placeholder="Өдрийн тэмдэглэл"></textarea><button class="btn" id="copy">Өдрийн тайлан хуулах</button>';
   $('note').value = x.note || '';
   $('note').oninput = function (e) { day(sel).note = e.target.value; save(); };
-  $('jp').onchange = function (e) { var v = +e.target.value || 0; day(sel).jp = v; if (v >= 60) addDone(2); save(); render(); };
-  $('pg').onchange = function (e) { var v = +e.target.value || 0; day(sel).pg = v; if (v >= 10) addDone(5); save(); render(); };
+  bind('jp', function () { return x.jp; }, function (v) { var y = day(sel), o = y.jp || 0; y.jp = v; delete y.jm; auto(2, o, v, 60); }, 1);
+  bind('pg', function () { return x.pg; }, function (v) { var y = day(sel), o = y.pg || 0; y.pg = v; auto(5, o, v, 10); }, 1);
   $('panel').querySelectorAll('.item').forEach(function (el) {
     el.onclick = function () {
       var i = +el.dataset.i, arr = day(sel).done, at = arr.indexOf(i);
@@ -225,8 +229,8 @@ function panel() {
 function copy(t, btn) {
   var o = btn.textContent;
   try {
-    navigator.clipboard.writeText(t).then(function () { btn.textContent = 'Хууллаа ✓'; setTimeout(function () { btn.textContent = o; }, 1500); }, function () { btn.textContent = 'Хуулах боломжгүй'; });
-  } catch (e) { btn.textContent = 'Хуулах боломжгүй'; }
+    navigator.clipboard.writeText(t).then(function () { btn.textContent = 'Хууллаа ✓'; setTimeout(function () { btn.textContent = o; }, 1500); }, function () { prompt('Гараар хуул:', t); });
+  } catch (e) { prompt('Гараар хуул:', t); }
 }
 
 function test() {
@@ -237,7 +241,7 @@ function test() {
     var b = parseFloat(M['b' + m[0]]), f = parseFloat(M['f' + m[0]]);
     var dl = (isNaN(b) || isNaN(f)) ? '—' : ((f - b > 0 ? '+' : '') + Math.round((f - b) * 10) / 10);
     h += '<div class="tt"><div>' + m[1] + '</div>' + PH.map(function (p) {
-      return '<input type="number" inputmode="decimal" data-k="' + p[0] + m[0] + '" value="' + (M[p[0] + m[0]] || '') + '">';
+      return '<input type="number" inputmode="decimal" aria-label="' + m[1] + ' ' + p[1] + '" data-k="' + p[0] + m[0] + '" value="' + (M[p[0] + m[0]] || '') + '">';
     }).join('') + '<div class="dl">' + dl + '</div></div>';
   });
   h += '<div class="rating" style="text-align:left;margin-top:6px">Ижил нөхцөл, зөв техникээр хэм. Push-up, plank-ийг хамгийн их үзүүлэлтээр бич.</div>';
@@ -266,6 +270,8 @@ function progress() {
 }
 
 function render() {
+  var pc = cur; clock();
+  if (cur !== pc && sel === (pc || 1)) sel = cur || 1;
   document.querySelectorAll('.tabs button').forEach(function (b, i) {
     b.className = i === tab ? 'on' : '';
     b.onclick = function () { tab = i; render(); };
@@ -305,9 +311,15 @@ function lk(id, q) {
   $(id).querySelectorAll(q).forEach(function (e) { e.disabled = true; });
   $(id).insertAdjacentHTML('afterbegin', '<div class="lk">🔒 Ирээдүйн өдөр — зөвхөн харах</div>');
 }
+function auto(i, o, v, t) {
+  var x = day(sel), at = x.done.indexOf(i);
+  if (v >= t && at < 0) x.done.push(i); else if (v < t && o >= t && at > -1) x.done.splice(at, 1);
+}
 function bind(id, get, set, num) {
   var e = $(id); e.value = get() || '';
-  e[num ? 'onchange' : 'oninput'] = function () { var v = num ? (+e.value || 0) : e.value; set(v); save(); if (num) render(); };
+  function f() { set(num ? Math.max(0, +e.value || 0) : e.value); save(); }
+  e.oninput = f;
+  if (num) e.onchange = function () { f(); render(); };
 }
 function sumWk(a, b, k) { var t = 0; for (var d = a; d <= b; d++) t += (S[d] && +S[d][k]) || 0; return t; }
 function streak() { var s = 0; for (var d = cur; d >= 1; d--) { if (sc(d) >= 4) s++; else if (d !== cur) break; } return s; }
@@ -346,7 +358,7 @@ function study() {
     bar('Сарын нийт (цаг)', Math.round(jt / 6) / 10, 30) + WK.map(function (w, i) { return row('Week ' + (i + 1) + ' · Nov ' + w[0] + '–' + w[1], Math.round(sumWk(w[0], w[1], 'jp') / 6) / 10 + ' цаг'); }).join('');
   wire('jap');
   [0, 1, 2, 3].forEach(function (i) {
-    bind('jm' + i, function () { return jm[i]; }, function (v) { var y = day(sel); y.jm = y.jm || [0, 0, 0, 0]; y.jm[i] = v; y.jp = y.jm.reduce(function (p, c) { return p + c; }, 0); if (y.jp >= 60) addDone(2); }, 1);
+    bind('jm' + i, function () { return jm[i]; }, function (v) { var y = day(sel), o = y.jp || 0; y.jm = y.jm || [0, 0, 0, 0]; y.jm[i] = v; y.jp = y.jm.reduce(function (p, c) { return p + c; }, 0); auto(2, o, y.jp, 60); }, 1);
   });
   bind('jg', function () { return x.jg; }, function (v) { day(sel).jg = v; });
   bind('jv', function () { return x.jv; }, function (v) { day(sel).jv = v; });
@@ -363,7 +375,7 @@ function study() {
   bind('bt', function () { return b.t; }, function (v) { bk('t', v.slice(0, 200)); });
   bind('btot', function () { return b.tot; }, function (v) { bk('tot', v); }, 1);
   bind('bcur', function () { return b.cur; }, function (v) { bk('cur', v); }, 1);
-  bind('rpg', function () { return x.pg; }, function (v) { day(sel).pg = v; if (v >= 10) addDone(5); }, 1);
+  bind('rpg', function () { return x.pg; }, function (v) { var y = day(sel), o = y.pg || 0; y.pg = v; auto(5, o, v, 10); }, 1);
   bind('rn', function () { return x.rn; }, function (v) { day(sel).rn = v; });
   lk('rd', '.dd');
 }
@@ -394,6 +406,7 @@ $('rs').onclick = function () {
   } catch (e) { alert('Backup буруу байна'); }
 };
 
+document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
 render();
 if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function () {}); }
 </script>
