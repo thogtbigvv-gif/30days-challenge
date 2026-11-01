@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="Lock In">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="icon" href="icon-192.png">
-<title>November Lock In — Tracker</title>
+<title>November Lock In</title>
 <style>
 :root{--bg:#f3ede1;--card:#faf6ec;--ink:#2b2118;--mut:#7a6a58;--line:#d9ccb4;--accent:#8a5a2b;--on:#fff7e8;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16120e;--card:#211a14;--ink:#eadfc9;--mut:#a19078;--line:#3a2f25;--accent:#c9975a;--on:#1a130c;color-scheme:dark}}
@@ -95,53 +95,74 @@ textarea,input[type=number],input[type=text],.tt input{font-size:16px!important}
 #dash{display:flex;align-items:center;gap:14px;text-align:left;font-size:13px;margin-top:12px}
 .toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:22px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:6;white-space:nowrap}
 .toast.on{opacity:1;transform:translate(-50%,0)}
+.stats{grid-template-columns:repeat(4,1fr)}.stats b{font-size:20px}
+h1{margin:2px 0 4px}.hdr{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.dayb{flex:none;margin-top:4px;border:1px solid var(--accent);color:var(--accent);border-radius:20px;padding:5px 12px;font-size:13px;letter-spacing:.06em;white-space:nowrap}
+.msg{font-size:14px;color:var(--mut);font-style:italic;margin:4px 0 14px}
+.qa{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.qa button,.sub button{min-height:46px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:13px;cursor:pointer}
+.sub{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}.sub button{flex:none;padding:0 14px;border-radius:22px;background:var(--card)}.sub .on{background:var(--accent);color:var(--on);border-color:var(--accent)}
+.lg{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:11px;color:var(--mut);margin-top:10px}
+.day.part{border-color:color-mix(in srgb,var(--accent) 50%,var(--line))}.day.full{background:var(--accent);color:var(--on)}.day.full small{color:var(--on)}
+.big small{font-size:13px;color:var(--mut)}
+.ck{display:flex;align-items:center;gap:12px;min-height:48px;border-top:1px solid var(--line);cursor:pointer}.ck input{flex:none;width:24px;height:24px;accent-color:var(--accent)}
+.xr{padding:8px 0;border-top:1px solid var(--line)}.xr b{display:block;font-size:14px}.xr .ex{display:block;margin-bottom:6px}
 </style>
 </head>
 <body>
 <main>
-  <div class="eyebrow">November 2026 · The Lock In Project</div>
-  <h1>BUILD YOURSELF.</h1>
-
   <div class="card" id="inst" hidden></div>
 
-  <div class="card">
-    <div class="stats">
-      <div><b id="tot">0</b><span>Сар · /180</span></div>
-      <div><b id="wk">0</b><span id="wkl">7 хоног · /42</span></div>
-      <div><b id="perf">0</b><span>Төгс өдөр · 6/6</span></div>
-    </div>
-    <div class="bar"><i id="barfill"></i></div>
-    <div class="rating" id="rating"></div>
-    <div class="rating" id="dash" style="margin-top:6px"></div>
-    <div class="pil" id="pil"></div>
-  </div>
-
-  <nav class="tabs" aria-label="Цэс"><button aria-label="Өдөр"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><span>Өдөр</span></button><button aria-label="Бэлтгэл"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8v8M18 8v8M3 10v4M21 10v4M6 12h12"/></svg><span>Бэлтгэл</span></button><button aria-label="Сургалт"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V19c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5z"/><path d="M12 6v13.5"/></svg><span>Сургалт</span></button><button aria-label="Journal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19l1-4L16.5 4.5a2 2 0 0 1 3 3L9 18z"/><path d="M14 7l3 3"/></svg><span>Journal</span></button><button aria-label="Baseline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/></svg><span>Baseline</span></button><button aria-label="Ахиц"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 20v-7M11 20V5M17 20v-10M3 20h18"/></svg><span>Ахиц</span></button></nav>
-
-  <section class="v" id="v0">
+  <section class="v" id="vH">
+    <div class="hdr"><div><div class="eyebrow" id="dt"></div><h1>November Lock In</h1></div><div class="dayb" id="dayb"></div></div>
+    <p class="msg" id="msg"></p>
     <div class="card">
-      <p class="sec">30 хоног</p>
+      <div class="stats">
+        <div><b id="tot">0</b><span>Оноо · /180</span></div>
+        <div><b id="pct">0%</b><span>Гүйцэтгэл</span></div>
+        <div><b id="perf">0</b><span>Төгс өдөр</span></div>
+        <div><b id="wk">0</b><span id="wkl">7 хоног · /42</span></div>
+      </div>
+      <div class="bar"><i id="barfill"></i></div>
+      <div class="rating" id="rating"></div>
+      <div class="rating" id="dash" style="margin-top:6px"></div>
+      <div class="pil" id="pil"></div>
+    </div>
+    <div class="card" id="today"></div>
+    <div class="card"><p class="sec">Хурдан нээх</p><div class="qa" id="qa"></div></div>
+  </section>
+
+  <nav class="tabs" id="nav" aria-label="Цэс"></nav>
+
+  <section class="v" id="vC">
+    <div class="card">
+      <p class="sec">November 2026</p>
       <div class="grid" id="wds"></div>
       <div class="grid" id="cal" style="margin-top:6px"></div>
+      <div class="lg"><span>■ Төгс 6/6</span><span>◧ Хагас</span><span>┄ Алгассан</span><span>○ Удахгүй</span></div>
     </div>
     <div class="card" id="panel"></div>
   </section>
 
-  <section class="v" id="v3"><div class="card" id="fit"></div><div class="card" id="fhist"></div></section>
-  <section class="v" id="v4"><div class="card" id="jap"></div><div class="card" id="rd"></div></section>
-  <section class="v" id="v5"><div class="card" id="jr"></div></section>
-  <section class="v" id="v1">
-    <div class="card" id="test"></div>
+  <section class="v" id="vA">
+    <div class="sub" id="sub"></div>
+    <div class="card" id="gl"></div><div class="card" id="fit"></div><div class="card" id="fhist"></div>
+    <div class="card" id="jap"></div><div class="card" id="mnt"></div><div class="card" id="ls"></div><div class="card" id="rd"></div>
   </section>
 
-  <section class="v" id="v2">
+  <section class="v" id="vJ"><div class="card" id="jr"></div><div class="card" id="jh"></div></section>
+
+  <section class="v" id="vP">
+    <div class="card" id="ps"></div>
     <div class="card" id="targets"></div>
     <div class="card" id="chartc"></div>
     <div class="card" id="an"></div>
+    <div class="card" id="test"></div>
     <div class="card">
       <p class="sec">Backup</p>
       <div class="rating" style="text-align:left">Өгөгдөл зөвхөн энэ browser дээр хадгалагдана. Утас солих, browser цэвэрлэхийн өмнө backup хий.</div>
-      <button class="btn" id="bk">Backup хуулах</button><button class="btn" id="rs">Сэргээх</button>
+      <button class="btn" id="bk">Backup хуулах</button><button class="btn" id="dl">Файл татах</button><button class="btn" id="rfb">Файлаас сэргээх</button><button class="btn" id="rs">Paste-ээр сэргээх</button>
+      <input type="file" id="rf" accept=".json,application/json" hidden>
     </div>
   </section>
 </main>
@@ -152,7 +173,11 @@ textarea,input[type=number],input[type=text],.tt input{font-size:16px!important}
 var KEY = 'lockin-nov-2026';
 var S = {};
 try { S = clean(JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { S = {}; }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+var sv = 0;
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { toast('⚠ Хадгалж чадсангүй — Backup хий'); return; }
+  clearTimeout(sv); sv = setTimeout(function () { if (!$('toast').classList.contains('on')) toast('Хадгалагдлаа ✓'); }, 900);
+}
 function $(id) { return document.getElementById(id); }
 
 var P = [
@@ -163,13 +188,13 @@ var P = [
   { n: 'LIFESTYLE', d: 'Нойр, хоол, орчны цэгцтэй байдал' },
   { n: 'READING', d: '10-аас дээш хуудас' }
 ];
-var FIT = ['Rest — бүрэн сэргэлт', 'Strength A — цээж, мөр, трицепс', 'Cardio — 30–35 мин', 'Strength B — нуруу, мөр, core', 'Mobility + Recovery', 'Strength C — full body', 'Cardio — 40–50 мин'];
+var FIT = ['Rest — бүрэн сэргэлт', 'Strength A — Push & Shoulders', 'Cardio — 30–35 мин', 'Strength B — Back & Core', 'Mobility + Recovery', 'Strength C — full body', 'Cardio — 40–50 мин'];
 var DN = ['Ням', 'Даваа', 'Мягмар', 'Лхагва', 'Пүрэв', 'Баасан', 'Бямба'];
 var WD = ['Да', 'Мя', 'Лх', 'Пү', 'Ба', 'Бя', 'Ня'];
 var MET = [['w', 'Жин (кг)'], ['p', 'Push-up'], ['pl', 'Plank (сек)'], ['sq', 'Squat 1 мин'], ['js', 'Япон яриа (сек)']];
-var PH = [['b', 'Nov 1'], ['m', 'Nov 15'], ['f', 'Nov 30']];
+var PH = [['b', 'Baseline<br>Nov 1'], ['m', 'Midpoint<br>Nov 15'], ['f', 'Final<br>Nov 30']];
 
-var now, todayN, cur, sel, tab = 0;
+var now, todayN, cur, sel, tab = 0, sub = 0;
 function clock() {
   now = new Date();
   var y = now.getFullYear(), m = now.getMonth();
@@ -188,13 +213,14 @@ function addDone(i) { var x = day(sel); if (x.done.indexOf(i) < 0) x.done.push(i
 function stats() {
   var tot = 0, perf = 0, last = 0;
   for (var k = 1; k <= 30; k++) { tot += sc(k); if (sc(k) === 6) perf++; if (sc(k) > 0) last = k; }
-  var w = sel <= 28 ? Math.ceil(sel / 7) : 5;
+  var cc = cur || 1, w = cc <= 28 ? Math.ceil(cc / 7) : 5;
   var a = (w - 1) * 7 + 1, b = Math.min(w * 7, 30), wt = 0;
   for (var j = a; j <= b; j++) wt += sc(j);
   $('tot').textContent = tot;
   $('wk').textContent = wt;
   $('wkl').textContent = 'Nov ' + a + '–' + b + ' · /' + (b - a + 1) * 6;
   $('perf').textContent = perf;
+  $('pct').textContent = Math.round(tot / 1.8) + '%';
   $('barfill').style.width = (tot / 180 * 100) + '%';
   var r = '—';
   var el = cur - (cur && sc(cur) === 0 ? 1 : 0);
@@ -211,7 +237,7 @@ function calendar() {
   var h = '';
   for (var i = 0; i < (dow(1) + 6) % 7; i++) h += '<div></div>';
   for (var d = 1; d <= 30; d++) {
-    h += '<button class="day' + (d === sel ? ' sel' : '') + (d === todayN ? ' today' : '') + (d > cur ? ' fut' : sc(d) === 6 ? ' full' : sc(d) === 0 && d < cur ? ' miss' : '') + '" style="--s:' + sc(d) + '" data-d="' + d + '">' + d + '<small>' + sc(d) + '/6</small></button>';
+    h += '<button class="day' + (d === sel ? ' sel' : '') + (d === todayN ? ' today' : '') + (d > cur ? ' fut' : sc(d) === 6 ? ' full' : sc(d) === 0 && d < cur ? ' miss' : sc(d) > 0 ? ' part' : '') + '" style="--s:' + sc(d) + '" data-d="' + d + '" aria-label="Nov ' + d + ', ' + sc(d) + '/6' + (d > cur ? ', удахгүй' : '') + '">' + d + '<small>' + sc(d) + '/6</small></button>';
   }
   $('cal').innerHTML = h;
   $('cal').querySelectorAll('.day').forEach(function (b) {
@@ -219,28 +245,34 @@ function calendar() {
   });
 }
 
-function panel() {
-  var dn = done(sel), x = S[sel] || {};
-  var items = P.map(function (p, i) {
-    var desc = i === 1 ? 'Өнөөдөр: ' + FIT[dow(sel)] : p.d;
+function items(d) {
+  var dn = done(d);
+  return P.map(function (p, i) {
     var on = dn.indexOf(i) > -1;
-    return '<button class="item' + (on ? ' on' : '') + '" data-i="' + i + '" aria-pressed="' + on + '"><span class="box">' + (on ? '✓' : '') + '</span><span class="t"><b>' + p.n + '</b><span>' + desc + '</span></span></button>';
+    return '<button class="item' + (on ? ' on' : '') + '" data-i="' + i + '" aria-pressed="' + on + '"><span class="box">' + (on ? '✓' : '') + '</span><span class="t"><b>' + p.n + '</b><span>' + (i === 1 ? FIT[dow(d)] : p.d) + '</span></span></button>';
   }).join('');
-  $('panel').innerHTML = '<div class="head"><h2>November ' + sel + ' · ' + DN[dow(sel)] + '</h2><span class="big">' + dn.length + '/6</span></div>' + items +
-    '<div class="nums"><div><label for="jp">Япон хэл (минут)</label><input type="number" inputmode="numeric" min="0" id="jp"></div>' +
-    '<div><label for="pg">Уншсан хуудас</label><input type="number" inputmode="numeric" min="0" id="pg"></div></div>' +
-    '<textarea id="note" aria-label="Тэмдэглэл" placeholder="Өдрийн тэмдэглэл"></textarea><button class="btn" id="copy">Өдрийн тайлан хуулах</button>';
-  $('note').value = x.note || '';
-  $('note').oninput = function (e) { day(sel).note = e.target.value; save(); };
-  bind('jp', function () { return x.jp; }, function (v) { var y = day(sel), o = y.jp || 0; y.jp = v; delete y.jm; auto(2, o, v, 60); }, 1);
-  bind('pg', function () { return x.pg; }, function (v) { var y = day(sel), o = y.pg || 0; y.pg = v; auto(5, o, v, 10); }, 1);
-  $('panel').querySelectorAll('.item').forEach(function (el) {
+}
+function wireItems(id, d) {
+  $(id).querySelectorAll('.item').forEach(function (el) {
     el.onclick = function () {
-      var i = +el.dataset.i, arr = day(sel).done, at = arr.indexOf(i);
+      if (d > cur) return;
+      var i = +el.dataset.i, arr = day(d).done, at = arr.indexOf(i);
       if (at > -1) arr.splice(at, 1); else { arr.push(i); vib(); if (arr.length === 6) toast('6 / 6 — Lock in ✓'); }
       save(); render();
     };
   });
+}
+function panel() {
+  var dn = done(sel), x = S[sel] || {};
+  $('panel').innerHTML = '<div class="head"><h2>November ' + sel + ' · ' + DN[dow(sel)] + '</h2><span class="big">' + dn.length + '/6 <small>' + Math.round(dn.length / 6 * 100) + '%</small></span></div>' + items(sel) +
+    '<div class="nums"><div><label for="jp">Япон хэл (минут)</label><input type="number" inputmode="numeric" min="0" id="jp"></div>' +
+    '<div><label for="pg">Уншсан хуудас</label><input type="number" inputmode="numeric" min="0" id="pg"></div></div>' +
+    '<label class="lb" for="note">Өдрийн reflection</label><textarea id="note" placeholder="Өнөөдөр юу сайн болов? Маргааш юуг сайжруулах вэ?"></textarea><button class="btn" id="copy">Өдрийн тайлан хуулах</button>';
+  $('note').value = x.note || '';
+  $('note').oninput = function (e) { day(sel).note = e.target.value; save(); };
+  bind('jp', function () { return x.jp; }, function (v) { var y = day(sel), o = y.jp || 0; y.jp = v; delete y.jm; auto(2, o, v, 60); }, 1);
+  bind('pg', function () { return x.pg; }, function (v) { var y = day(sel), o = y.pg || 0; y.pg = v; auto(5, o, v, 10); }, 1);
+  wireItems('panel', sel);
   $('copy').onclick = function () {
     var dd = done(sel);
     var t = 'Nov ' + sel + ' — ' + dd.length + '/6\n' + P.map(function (p, i) { return (dd.indexOf(i) > -1 ? '✓ ' : '✗ ') + p.n; }).join('\n');
@@ -267,7 +299,7 @@ function test() {
     var b = parseFloat(M['b' + m[0]]), f = parseFloat(M['f' + m[0]]);
     var dl = (isNaN(b) || isNaN(f)) ? '—' : ((f - b > 0 ? '+' : '') + Math.round((f - b) * 10) / 10);
     h += '<div class="tt"><div>' + m[1] + '</div>' + PH.map(function (p) {
-      return '<input type="number" inputmode="decimal" aria-label="' + m[1] + ' ' + p[1] + '" data-k="' + p[0] + m[0] + '" value="' + (M[p[0] + m[0]] || '') + '">';
+      return '<input type="number" inputmode="decimal" aria-label="' + m[1] + ' ' + p[1].replace('<br>', ' ') + '" data-k="' + p[0] + m[0] + '" value="' + (M[p[0] + m[0]] || '') + '">';
     }).join('') + '<div class="dl">' + dl + '</div></div>';
   });
   h += '<div class="rating" style="text-align:left;margin-top:6px">Ижил нөхцөл, зөв техникээр хэм. Push-up, plank-ийг хамгийн их үзүүлэлтээр бич.</div>';
@@ -295,6 +327,75 @@ function progress() {
   $('chartc').innerHTML = '<p class="sec">Өдөр бүрийн оноо</p><div class="chart">' + c + '</div><div class="axis"><span>1</span><span>10</span><span>20</span><span>30</span></div>';
 }
 
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function add(a, b) { return a + b; }
+function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+var SUB = ['Glow Up', 'Fitness', 'Japanese', 'Mental', 'Lifestyle', 'Reading'], SP = [['gl'], ['fit', 'fhist'], ['jap'], ['mnt'], ['ls'], ['rd']];
+var MSG = ['Тогтвортой байдал урам зоригоос илүү.', 'Амлалтаа өөртөө биелүүл.', 'Өнөөдрийн нэг алхам чухал.', 'Төгс биш, тууштай бай.', 'Систем чамайг авч явна.'];
+var QA = [['Өнөөдрийн жагсаалт', 0, 0], ['Fitness', 2, 1], ['Japanese', 2, 2], ['Journal', 3, 0], ['Reading', 2, 5], ['Ахиц', 4, 0]];
+var GD = ['Өглөөний арчилгаа', 'Оройн арчилгаа', 'Хувийн цэвэр байдал'], GW = ['Үс, grooming шалгалт', 'Хумсны арчилгаа', 'Хувцас, wardrobe хяналт'], LC = ['Өглөөний routine', 'Оройн routine', 'Тэнцвэртэй хоол', 'Өрөөний цэгцлэл'];
+function wkOf(d) { return d <= 28 ? Math.ceil(d / 7) : 5; }
+function chk(n, att, i, on) { return '<label class="ck"><input class="dd" type="checkbox" ' + att + '="' + i + '"' + (on ? ' checked' : '') + '>' + n + '</label>'; }
+function jn() { var n = 0; for (var d = 1; d <= 30; d++) { var z = S[d]; if (z && z.j && z.j.join('').trim()) n++; } return n; }
+
+function home() {
+  var c = cur, end = c === 30 && !todayN;
+  $('dt').textContent = now.getFullYear() + '.' + pad(now.getMonth() + 1) + '.' + pad(now.getDate()) + ' · ' + DN[now.getDay()];
+  $('dayb').textContent = 'DAY ' + pad(c) + ' / 30';
+  $('msg').textContent = !c ? 'Challenge November 1-нд эхэлнэ.' : end ? 'Challenge дууслаа — Final Review-ээ бөглө.' : MSG[c % MSG.length];
+  $('today').innerHTML = c ? '<div class="head"><h2>' + (end ? 'Сүүлийн өдөр' : 'Өнөөдөр') + ' · Nov ' + c + '</h2><span class="big">' + sc(c) + '/6</span></div>' + items(c) : '<p class="sec">Өнөөдрийн зорилт</p><div class="lk">Challenge November 1-нд эхэлнэ.</div>';
+  if (c) wireItems('today', c);
+  $('qa').innerHTML = QA.map(function (q, i) { return '<button data-q="' + i + '">' + q[0] + '</button>'; }).join('');
+  $('qa').querySelectorAll('button').forEach(function (b) {
+    b.onclick = function () {
+      var q = QA[+b.dataset.q];
+      if (!q[1]) { $('today').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+      sel = cur || 1; tab = q[1]; if (q[1] === 2) sub = q[2];
+      window.scrollTo(0, 0); render();
+    };
+  });
+}
+
+function glow() {
+  var x = S[sel] || {}, g = x.gl || [0, 0, 0], w = wkOf(sel), W = (S.gw || {})[w] || { c: [0, 0, 0], t: ['', '', ''] };
+  $('gl').innerHTML = nv() + '<p class="sec">Glow Up · ' + g.reduce(add, 0) + ' / 3</p>' + GD.map(function (n, i) { return chk(n, 'data-g', i, g[i]); }).join('') +
+    '<p class="sec" style="margin-top:14px">Долоо хоног ' + w + ' · Nov ' + WK[w - 1][0] + '–' + WK[w - 1][1] + '</p>' +
+    GW.map(function (n, i) { return chk(n, 'data-w', i, W.c[i]) + '<input class="dd" type="text" data-t="' + i + '" aria-label="' + n + ' тэмдэглэл" placeholder="Тэмдэглэл (заавал биш)">'; }).join('');
+  wire('gl');
+  function gw() { S.gw = S.gw || {}; return (S.gw[w] = S.gw[w] || { c: [0, 0, 0], t: ['', '', ''] }); }
+  $('gl').querySelectorAll('[data-g]').forEach(function (e) {
+    e.onchange = function () { var y = day(sel); y.gl = y.gl || [0, 0, 0]; var o = y.gl.reduce(add, 0); y.gl[+e.dataset.g] = e.checked ? 1 : 0; auto(0, o, y.gl.reduce(add, 0), 3); save(); render(); };
+  });
+  $('gl').querySelectorAll('[data-w]').forEach(function (e) { e.onchange = function () { gw().c[+e.dataset.w] = e.checked ? 1 : 0; save(); }; });
+  $('gl').querySelectorAll('[data-t]').forEach(function (e) { e.value = W.t[+e.dataset.t] || ''; e.oninput = function () { gw().t[+e.dataset.t] = e.value.slice(0, 500); save(); }; });
+  lk('gl', '.dd');
+}
+
+function life() {
+  var x = S[sel] || {}, l = x.ls || { sl: 0, w: 0, c: [0, 0, 0, 0] };
+  function L() { var y = day(sel); return (y.ls = y.ls || { sl: 0, w: 0, c: [0, 0, 0, 0] }); }
+  $('ls').innerHTML = nv() + '<p class="sec">Lifestyle · ' + l.c.reduce(add, 0) + ' / 4</p>' + LC.map(function (n, i) { return chk(n, 'data-l', i, l.c[i]); }).join('') +
+    '<div class="nums"><div><label class="lb" for="sl">Нойр (цаг)</label><input class="dd" type="number" inputmode="decimal" min="0" max="24" step="0.5" id="sl"></div><div><label class="lb" for="wt">Ус (литр)</label><input class="dd" type="number" inputmode="decimal" min="0" step="0.25" id="wt"></div></div>';
+  wire('ls');
+  $('ls').querySelectorAll('[data-l]').forEach(function (e) {
+    e.onchange = function () { var y = L(), o = y.c.reduce(add, 0); y.c[+e.dataset.l] = e.checked ? 1 : 0; auto(4, o, y.c.reduce(add, 0), 4); save(); render(); };
+  });
+  bind('sl', function () { return l.sl; }, function (v) { L().sl = Math.min(24, v); }, 1);
+  bind('wt', function () { return l.w; }, function (v) { L().w = v; }, 1);
+  lk('ls', '.dd');
+}
+
+function mental() {
+  $('mnt').innerHTML = '<p class="sec">Mental · Journal ' + jn() + ' / 30</p><div class="ex">Өдөр бүр 4 богино асуултад хариул. 3 асуултад хариулбал Mental ✓ автоматаар тэмдэглэгдэнэ (гараар өөрчилж болно).</div><button class="btn" id="gj">Journal нээх</button>';
+  $('gj').onclick = function () { tab = 3; window.scrollTo(0, 0); render(); };
+}
+
+function summary() {
+  var t = 0, pf = 0;
+  for (var d = 1; d <= 30; d++) { t += sc(d); if (sc(d) === 6) pf++; }
+  $('ps').innerHTML = '<p class="sec">Нийт ахиц</p>' + bar('Нийт оноо', t, 180, t + ' / 180 · ' + Math.round(t / 1.8) + '%') + row('Төгс өдөр (6/6)', pf + ' / ' + cur + ' өдөр') + row('Journal тогтвортой байдал', jn() + ' / ' + cur + ' өдөр');
+}
+
 function render() {
   var pc = cur; clock();
   if (cur !== pc && sel === (pc || 1)) sel = cur || 1;
@@ -302,8 +403,10 @@ function render() {
     b.className = i === tab ? 'on' : '';
     b.onclick = function () { tab = i; window.scrollTo(0, 0); render(); };
   });
-  ['v0', 'v3', 'v4', 'v5', 'v1', 'v2'].forEach(function (id, i) { $(id).className = 'v' + (i === tab ? ' on' : ''); });
-  stats(); dash(); calendar(); panel(); fitness(); study(); journal(); test(); progress(); analytics();
+  ['vH', 'vC', 'vA', 'vJ', 'vP'].forEach(function (id, i) { $(id).className = 'v' + (i === tab ? ' on' : ''); });
+  $('sub').querySelectorAll('button').forEach(function (b, i) { b.className = i === sub ? 'on' : ''; });
+  ['gl', 'fit', 'fhist', 'jap', 'mnt', 'ls', 'rd'].forEach(function (id) { $(id).hidden = SP[sub].indexOf(id) < 0; });
+  stats(); dash(); home(); calendar(); panel(); glow(); fitness(); study(); mental(); life(); journal(); summary(); test(); progress(); analytics();
 }
 
 function clean(o) {
@@ -316,17 +419,24 @@ function clean(o) {
     var y = { done: [] };
     (Array.isArray(x.done) ? x.done : []).forEach(function (i) { i = +i; if (i >= 0 && i <= 5 && i % 1 === 0 && y.done.indexOf(i) < 0) y.done.push(i); });
     ['jp', 'pg', 'fn'].forEach(function (k) { if (x[k] !== undefined) y[k] = n(x[k]); });
-    ['note', 'jg', 'jv', 'rn', 'fl'].forEach(function (k) { if (x[k]) y[k] = s(x[k]); });
+    ['note', 'jg', 'jv', 'rn', 'fl', 'pn'].forEach(function (k) { if (x[k]) y[k] = s(x[k]); });
     if (Array.isArray(x.jm)) y.jm = [0, 1, 2, 3].map(function (i) { return n(x.jm[i]); });
     if (Array.isArray(x.j)) y.j = [0, 1, 2, 3, 4].map(function (i) { return s(x.j[i]); });
+    if (Array.isArray(x.gl)) y.gl = [0, 1, 2].map(function (i) { return x.gl[i] ? 1 : 0; });
+    if (Array.isArray(x.fx)) y.fx = x.fx.slice(0, 8).map(function (v) { return s(v).slice(0, 100); });
+    if (x.ls && typeof x.ls === 'object') y.ls = { sl: Math.min(24, n(x.ls.sl)), w: n(x.ls.w), c: [0, 1, 2, 3].map(function (i) { return x.ls.c && x.ls.c[i] ? 1 : 0; }) };
     r[d] = y;
   }
   if (o.m && typeof o.m === 'object') { r.m = {}; for (var k in o.m) if (/^[bmf](w|p|pl|sq|js)$/.test(k)) r.m[k] = String(o.m[k]).slice(0, 10); }
+  if (o.gw && typeof o.gw === 'object') {
+    r.gw = {};
+    for (var w = 1; w <= 5; w++) { var g = o.gw[w]; if (g && typeof g === 'object') r.gw[w] = { c: [0, 1, 2].map(function (i) { return g.c && g.c[i] ? 1 : 0; }), t: [0, 1, 2].map(function (i) { return g.t ? s(g.t[i]).slice(0, 500) : ''; }) }; }
+  }
   if (o.bk && typeof o.bk === 'object') r.bk = { t: s(o.bk.t).slice(0, 200), tot: n(o.bk.tot), cur: n(o.bk.cur) };
   return r;
 }
 var EX = ['Бүрэн сэргэлт, хөнгөн алхалт', 'Push-ups 3×12–18 · Pike push-ups 3×6–10 · Diamond 2×8–12 · Squat 3×15–20 · Plank 3×40–60с', 'Хөнгөн гүйлт 30–35 мин', 'Backpack rows 4×12–15 · Reverse fly 3×12 · Reverse snow angels 3×12–15 · Dead bug 3×12 · Side plank 2×30с · Superman 3×20–30с', 'Mobility 20–30 мин, зөөлөн суналт', 'Push-ups 3×12–15 · Bulgarian split squat 3×10 · Rows 3×12 · Glute bridge 3×15–20 · Mountain climbers 3×20 · Plank 3×45с', 'Хурдан алхалт эсвэл хөнгөн гүйлт 40–50 мин'];
-var Q = ['Өнөөдөр би юу амжуулсан бэ?', 'Юуг илүү сайн хийж болох байсан бэ?', 'Өнөөдөр ямар шинэ зүйл сурсан бэ?', 'Миний өнөөдрийн хамгийн зөв шийдвэр юу байв?', 'Маргааш юуг сайжруулах вэ?'];
+
 var WK = [[1, 7], [8, 14], [15, 21], [22, 28], [29, 30]];
 function row(a, b) { return '<div class="tg"><div class="l"><span>' + a + '</span><span>' + b + '</span></div></div>'; }
 function bar(l, v, m, t) { return '<div class="tg"><div class="l"><span>' + l + '</span><span>' + (t || v + ' / ' + m) + '</span></div><div class="bar"><i style="width:' + Math.min(100, m ? v / m * 100 : 0) + '%"></i></div></div>'; }
@@ -339,7 +449,7 @@ function lk(id, q) {
 }
 function auto(i, o, v, t) {
   var x = day(sel), at = x.done.indexOf(i);
-  if (v >= t && at < 0) x.done.push(i); else if (v < t && o >= t && at > -1) x.done.splice(at, 1);
+  if (v >= t && o < t && at < 0) x.done.push(i); else if (v < t && o >= t && at > -1) x.done.splice(at, 1);
 }
 function bind(id, get, set, num) {
   var e = $(id); e.value = get() || '';
@@ -356,24 +466,37 @@ function pbars() {
 }
 function dash() {
   var t = 0; for (var d = 1; d <= 30; d++) t += sc(d);
-  var txt = cur ? now.getFullYear() + '.' + (now.getMonth() + 1) + '.' + now.getDate() + ' · Өдөр ' + cur + ' / 30 · Streak ' + streak() + ' (≥4/6) · Гүйцэтгэл ' + Math.round(t / 180 * 100) + '%' : 'Challenge November 1-нд эхэлнэ';
+  var txt = cur ? 'Streak ' + streak() + ' (≥4/6) · Гүйцэтгэл ' + Math.round(t / 180 * 100) + '%' : 'Challenge November 1-нд эхэлнэ';
   var ts = cur ? sc(cur) : 0, L = 2 * Math.PI * 26;
   $('dash').innerHTML = '<svg width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Өнөөдөр ' + ts + ' / 6"><circle cx="32" cy="32" r="26" fill="none" stroke="var(--line)" stroke-width="6"/><circle cx="32" cy="32" r="26" fill="none" stroke="var(--accent)" stroke-width="6" stroke-linecap="round" stroke-dasharray="' + (ts / 6 * L) + ' ' + L + '" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle" font-size="16" fill="currentColor" font-family="Georgia,serif">' + ts + '/6</text></svg><div>' + txt + '</div>';
   $('pil').innerHTML = pbars();
 }
+var XS = {
+  1: [['Push-ups', '3×12–18', '60с'], ['Pike push-ups', '3×6–10', '60с'], ['Diamond push-ups', '2×8–12', '60с'], ['Squat', '3×15–20', '45с'], ['Plank', '3×40–60с', '45с']],
+  3: [['Backpack rows', '4×12–15', '60с'], ['Reverse fly', '3×12', '45с'], ['Reverse snow angels', '3×12–15', '45с'], ['Dead bug', '3×12', '45с'], ['Side plank', '2×30с', '30с'], ['Superman', '3×20–30с', '30с']],
+  5: [['Push-ups', '3×12–15', '60с'], ['Bulgarian split squat', '3×10', '60с'], ['Rows', '3×12', '60с'], ['Glute bridge', '3×15–20', '45с'], ['Mountain climbers', '3×20', '45с'], ['Plank', '3×45с', '45с']]
+};
 function fitness() {
-  var x = S[sel] || {}, w = dow(sel);
-  $('fit').innerHTML = nv() + '<p class="sec">' + FIT[w] + '</p><div class="ex">' + EX[w] + '</div>' +
+  var x = S[sel] || {}, w = dow(sel), E = XS[w], fx = x.fx || [], rec = w === 0 || w === 4, on = done(sel).indexOf(1) > -1;
+  $('fit').innerHTML = nv() + '<p class="sec">' + FIT[w] + '</p>' +
+    (E ? E.map(function (e, i) { return '<div class="xr"><b>' + e[0] + '</b><span class="ex">' + e[1] + ' · амралт ' + e[2] + '</span><input class="dd" type="text" data-x="' + i + '" aria-label="' + e[0] + ' — бодит сет × давталт" placeholder="Бодит: 3×15, 3×13"></div>'; }).join('') : '<div class="ex">' + EX[w] + '</div>') +
+    '<button class="item dd' + (on ? ' on' : '') + '" data-i="1" aria-pressed="' + on + '"><span class="box">' + (on ? '✓' : '') + '</span><span class="t"><b>Бэлтгэл дууссан</b><span>' + (rec ? 'Сэргэлтийн өдөр — заавал хийх шаардлагагүй. Тэмдэглэвэл 1 оноо.' : '1 оноо') + '</span></span></button>' +
     '<label class="lb" for="fn">Үзүүлэлт (нийт давталт эсвэл минут)</label><input class="dd" type="number" inputmode="decimal" min="0" id="fn">' +
-    '<label class="lb" for="fl">Дасгалын тэмдэглэл (сет × давталт, ачаалал)</label><textarea class="dd" id="fl"></textarea>';
-  wire('fit');
+    '<label class="lb" for="fl">Дасгалын тэмдэглэл (ачаалал, мэдрэмж)</label><textarea class="dd" id="fl"></textarea>';
+  wire('fit'); wireItems('fit', sel);
+  $('fit').querySelectorAll('[data-x]').forEach(function (e) {
+    e.value = fx[+e.dataset.x] || '';
+    e.oninput = function () { var y = day(sel); y.fx = y.fx || []; y.fx[+e.dataset.x] = e.value.slice(0, 100); save(); };
+  });
   bind('fn', function () { return x.fn; }, function (v) { day(sel).fn = v; }, 1);
   bind('fl', function () { return x.fl; }, function (v) { day(sel).fl = v; });
   lk('fit', '.dd');
-  var g = {}, rows = '';
+  var g = {}, rows = '', hh = '';
   for (var d = 1; d <= 30; d++) if (S[d] && S[d].fn > 0) { var k = FIT[dow(d)].split(' — ')[0]; (g[k] = g[k] || []).push(S[d].fn); }
   for (var k2 in g) { var a = g[k2], df = a[a.length - 1] - a[0]; rows += row(k2 + ' (' + a.length + ')', a[0] + ' → ' + a[a.length - 1] + ' (' + (df > 0 ? '+' : '') + df + ')'); }
+  for (var d2 = cur; d2 >= 1; d2--) { var z = S[d2]; if (z && (done(d2).indexOf(1) > -1 || z.fn > 0)) hh += row('Nov ' + d2 + ' · ' + FIT[dow(d2)].split(' — ')[0], z.fn > 0 ? z.fn : '✓'); }
   $('fhist').innerHTML = '<p class="sec">Долоо хоногийн хуваарь</p>' + [1, 2, 3, 4, 5, 6, 0].map(function (i) { return row(DN[i], FIT[i].split(' — ')[0]); }).join('') +
+    '<p class="sec" style="margin-top:14px">Бэлтгэлийн түүх</p>' + (hh || '<div class="lk">Одоогоор дууссан бэлтгэл алга.</div>') +
     '<p class="sec" style="margin-top:14px">Үзүүлэлтийн өөрчлөлт</p>' + (rows || '<div class="lk">Одоогоор үзүүлэлт бүртгээгүй байна.</div>');
 }
 function study() {
@@ -407,13 +530,26 @@ function study() {
   bind('rn', function () { return x.rn; }, function (v) { day(sel).rn = v; });
   lk('rd', '.dd');
 }
+var Q = ['Өнөөдөр би юу амжуулсан бэ?', 'Юуг илүү сайн хийж болох байсан бэ?', 'Өнөөдөр ямар шинэ зүйл сурсан бэ?', 'Миний маргаашийн тэргүүлэх зорилт юу вэ?'], JI = [0, 1, 2, 4];
+function jc(y) { return JI.filter(function (i) { return y.j && (y.j[i] || '').trim(); }).length; }
 function journal() {
-  var x = S[sel] || {}, j = x.j || [], n = 0;
-  for (var d = 1; d <= 30; d++) if (S[d] && S[d].j && S[d].j.join('').trim()) n++;
-  $('jr').innerHTML = nv() + '<p class="sec">Journal · ' + n + ' / 30</p>' + Q.map(function (q, i) { return '<label class="lb" for="q' + i + '">' + (i + 1) + '. ' + q + '</label><textarea class="dd" id="q' + i + '"></textarea>'; }).join('');
+  var x = S[sel] || {}, j = x.j || [];
+  $('jr').innerHTML = nv() + '<p class="sec">Journal · ' + jn() + ' / 30</p>' + Q.map(function (q, k) { return '<label class="lb" for="q' + k + '">' + (k + 1) + '. ' + q + '</label><textarea class="dd" id="q' + k + '"></textarea>'; }).join('') +
+    (j[3] ? '<label class="lb" for="q3o">Өмнө бичсэн: хамгийн зөв шийдвэр</label><textarea class="dd" id="q3o"></textarea>' : '') +
+    '<label class="lb" for="pn">Хувийн тэмдэглэл</label><textarea class="dd" id="pn"></textarea>';
   wire('jr');
-  Q.forEach(function (q, i) { bind('q' + i, function () { return j[i]; }, function (v) { var y = day(sel); y.j = y.j || ['', '', '', '', '']; y.j[i] = v; }); });
+  function jset(i) { return function (v) { var y = day(sel); y.j = y.j || ['', '', '', '', '']; var o = jc(y); y.j[i] = v; auto(3, o, jc(y), 3); }; }
+  JI.forEach(function (i, k) { bind('q' + k, function () { return j[i]; }, jset(i)); });
+  if (j[3]) bind('q3o', function () { return j[3]; }, jset(3));
+  bind('pn', function () { return x.pn; }, function (v) { day(sel).pn = v; });
   lk('jr', '.dd');
+  var h = '';
+  for (var k = 30; k >= 1; k--) {
+    var z = S[k];
+    if (z && ((z.j && z.j.join('').trim()) || z.pn)) h += '<button class="item" data-d="' + k + '"><span class="t"><b>Nov ' + k + ' · ' + DN[dow(k)] + '</b><span>' + esc(((z.j || []).join(' ').trim() || z.pn || '').slice(0, 80)) + '</span></span></button>';
+  }
+  $('jh').innerHTML = '<p class="sec">Өмнөх тэмдэглэлүүд</p>' + (h || '<div class="lk">Одоогоор тэмдэглэл алга. Эхний бичлэгээ дээр хий.</div>');
+  $('jh').querySelectorAll('.item').forEach(function (b) { b.onclick = function () { sel = +b.dataset.d; window.scrollTo(0, 0); render(); }; });
 }
 function analytics() {
   var q = 0, b = S.bk || {};
@@ -422,17 +558,33 @@ function analytics() {
     '<p class="sec" style="margin-top:14px">Pillar-уудын харьцуулалт</p>' + pbars() + bar('Тогтвортой байдал (≥4/6)', q, Math.max(cur, 1), q + ' / ' + cur + ' өдөр');
 }
 
-$('bk').onclick = function () { copy(JSON.stringify(S), $('bk')); };
-$('rs').onclick = function () {
-  var t = prompt('Backup-аа энд paste хий');
-  if (!t) return;
+function applyBackup(t) {
   try {
     var o = JSON.parse(t), c = clean(o);
-    if (!Object.keys(c).length && Object.keys(o).length) throw 0;
-    if (!confirm('Одоогийн өгөгдлийг солих уу?')) return;
-    S = c; save(); render();
-  } catch (e) { alert('Backup буруу байна'); }
+    if (!o || typeof o !== 'object' || Array.isArray(o) || !Object.keys(c).length) throw 0;
+    var n = Object.keys(c).filter(function (k) { return /^\d+$/.test(k); }).length;
+    if (!confirm('Backup: ' + n + ' өдрийн өгөгдөл. Одоогийн өгөгдлийг бүрэн солих уу?')) return;
+    S = c; save(); render(); toast('Сэргээлээ ✓');
+  } catch (e) { alert('Backup буруу эсвэл хоосон байна'); }
+}
+$('bk').onclick = function () { copy(JSON.stringify(S), $('bk')); };
+$('dl').onclick = function () {
+  try {
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(S)], { type: 'application/json' }));
+    a.download = 'lockin-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1500); toast('Backup файл татлаа ✓');
+  } catch (e) { copy(JSON.stringify(S), $('bk')); }
 };
+$('rfb').onclick = function () { $('rf').click(); };
+$('rf').onchange = function () {
+  var f = this.files[0]; this.value = '';
+  if (!f) return;
+  if (f.size > 1e6) { alert('Файл хэт том байна'); return; }
+  var r = new FileReader(); r.onload = function () { applyBackup(String(r.result)); }; r.readAsText(f);
+};
+$('rs').onclick = function () { var t = prompt('Backup-аа энд paste хий'); if (t) applyBackup(t); };
 
 function vib() { try { navigator.vibrate && navigator.vibrate(12); } catch (e) {} }
 var tt = 0;
@@ -440,7 +592,7 @@ function toast(m) { var t = $('toast'); t.textContent = m; t.className = 'toast 
 var tx = 0, ty = 0;
 document.addEventListener('touchstart', function (e) { var t = e.touches[0]; tx = t.clientX; ty = t.clientY; }, { passive: true });
 document.addEventListener('touchend', function (e) {
-  if (tab > 3 || (e.target.closest && e.target.closest('textarea,input,.chart,.tabs'))) return;
+  if (tab === 0 || tab > 3 || (e.target.closest && e.target.closest('textarea,input,.chart,.tabs,.sub'))) return;
   var t = e.changedTouches[0], dx = t.clientX - tx, dy = t.clientY - ty;
   if (Math.abs(dx) > 70 && Math.abs(dy) < 40) { sel = Math.min(30, Math.max(1, sel + (dx < 0 ? 1 : -1))); render(); }
 }, { passive: true });
@@ -461,6 +613,10 @@ window.addEventListener('beforeinstallprompt', function (e) {
 window.addEventListener('appinstalled', function () { $('inst').hidden = true; });
 if (/iphone|ipad|ipod/i.test(navigator.userAgent)) showInst('<div class="rating">iPhone: <b>Safari</b>-аар нээгээд Share ⬆️ → <b>Add to Home Screen</b>. Суулгахаасаа өмнө Backup хий.</div>');
 document.addEventListener('visibilitychange', function () { if (!document.hidden) render(); });
+var NAV = [['Нүүр', '<path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/>'], ['Календарь', '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>'], ['Үйлдэл', '<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>'], ['Journal', '<path d="M5 19l1-4L16.5 4.5a2 2 0 0 1 3 3L9 18z"/><path d="M14 7l3 3"/>'], ['Ахиц', '<path d="M5 20v-7M11 20V5M17 20v-10M3 20h18"/>']];
+$('nav').innerHTML = NAV.map(function (n) { return '<button aria-label="' + n[0] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + n[1] + '</svg><span>' + n[0] + '</span></button>'; }).join('');
+$('sub').innerHTML = SUB.map(function (n) { return '<button>' + n + '</button>'; }).join('');
+$('sub').querySelectorAll('button').forEach(function (b, i) { b.onclick = function () { sub = i; render(); }; });
 render();
 if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function () {}); }
 </script>
