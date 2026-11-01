@@ -1,0 +1,135 @@
+diff --git aa/index.html b/index.html
+index 9b5559a..1f73546 100644
+--- aa/index.html
++++ b/index.html
+@@ -111,6 +111,9 @@ h1{margin:2px 0 4px}.hdr{display:flex;justify-content:space-between;align-items:
+ .big small{font-size:13px;color:var(--mut)}
+ .ck{display:flex;align-items:center;gap:12px;min-height:48px;border-top:1px solid var(--line);cursor:pointer}.ck input{flex:none;width:24px;height:24px;accent-color:var(--accent)}
+ .xr{padding:8px 0;border-top:1px solid var(--line)}.xr b{display:block;font-size:14px}.xr .ex{display:block;margin-bottom:6px}
++#fc summary{cursor:pointer;min-height:44px;display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.18em;color:var(--mut);text-transform:uppercase}
++.ft{font-size:52px;text-align:center;margin:8px 0 14px;font-variant-numeric:tabular-nums;letter-spacing:.04em}
++.qa button.on{background:var(--accent);color:var(--on);border-color:var(--accent)}.qa button:disabled{opacity:.5}
+ </style>
+ </head>
+ <body>
+@@ -135,6 +138,13 @@ h1{margin:2px 0 4px}.hdr{display:flex;justify-content:space-between;align-items:
+       <div class="bar"><i id="barfill"></i></div>
+       <div class="rating" id="rating"></div>
+     </div>
++    <details class="card" id="fc">
++      <summary>Deep Focus<span id="fsum"></span></summary>
++      <div class="ft" id="ft" role="timer">25:00</div>
++      <div class="qa" id="fp"><button data-m="25">25 мин</button><button data-m="50">50 мин</button><button data-m="60">60 мин</button></div>
++      <button class="btn" id="fgo">Эхлэх</button><button class="btn" id="ffin" hidden>Дуусгах</button>
++      <div class="rating" style="text-align:left;margin-top:10px">Заавал биш. Өдрийн ✓-д нөлөөлөхгүй.</div>
++    </details>
+   </section>
+ 
+   <nav class="tabs" id="nav" aria-label="Цэс"></nav>
+@@ -189,7 +199,6 @@ var sv = 0;
+ function save() {
+   S.v = SV;
+   try { var j = JSON.stringify(S); localStorage.setItem(KEY, j); LAST = j; } catch (e) { toast('⚠ Хадгалж чадсангүй — Backup хий'); return; }
+-  clearTimeout(sv); sv = setTimeout(function () { if (!$('toast').classList.contains('on')) toast('Хадгалагдлаа ✓'); }, 900);
+ }
+ function $(id) { return document.getElementById(id); }
+ 
+@@ -220,7 +229,7 @@ function sc(d) { return done(d).filter(function (i) { return i !== 3; }).length;
+ function day(d) { S[d] = S[d] || { done: [] }; S[d].done = S[d].done || []; return S[d]; }
+ function addDone(i) { var x = day(sel); if (x.done.indexOf(i) < 0) x.done.push(i); }
+ 
+-function lvl(p) { return p >= 0.9 ? 'Excellent' : p >= 0.8 ? 'Strong' : p >= 0.65 ? 'Moderate' : 'Needs improvement'; }
++function lvl(p) { return p >= 0.9 ? 'Маш сайн' : p >= 0.8 ? 'Сайн' : p >= 0.65 ? 'Тогтвортой' : 'Үргэлжлүүл'; }
+ function stats() {
+   var tot = 0, perf = 0;
+   for (var k = 1; k <= 30; k++) { tot += sc(k); if (sc(k) === 5) perf++; }
+@@ -229,7 +238,7 @@ function stats() {
+   $('perf').textContent = perf;
+   $('barfill').style.width = (tot / 150 * 100) + '%';
+   var el = cur - (cur && sc(cur) === 0 ? 1 : 0), r = '—';
+-  if (el > 0) { var q = tot / (el * 5); r = 'Одоогийн хурд: ' + lvl(q) + ' (' + Math.round(q * 100) + '%)'; }
++  if (cur) r = 'Өдөр ' + cur + ' / 30' + (el > 0 ? ' · ' + lvl(tot / (el * 5)) : '');
+   $('rating').textContent = r;
+ }
+ 
+@@ -256,7 +265,7 @@ var G = {
+     'Өдөр 2 удаа, 5 мин. Долоо хоногт: үс засах, хумс таслах, хувцас/гутлаа шалгах.', 'Цэвэрлэгч + чийгшүүлэгч + SPF хангалттай. Шинэ бүтээгдэхүүн нэмэх шаардлагагүй.',
+     'Хэт олон бүтээгдэхүүн, SPF орхих, нүүрээ хэт олон угаах, бохир алчуур хэрэглэх.', 'Өглөө 3 мин: угаах → чийгшүүлэх → SPF. Орой 3 мин: угаах → чийгшүүлэх. Ням: хумс, үс.'],
+   1: ['Гэрт, хэрэгсэлгүй 3 хүч + 2 cardio + 1 mobility + 1 амралт.', 'Булчин, тэсвэр, байдал сайжирна.',
+-    'Эхлээд 3–5 мин дулаарч, дасгал бүрийг цэвэр техникээр хий. Дасгал бүрийн "Техник" хэсгийг нээж хар. Бодит сет, давталтаа бичих нь заавал биш.',
++    'Эхлээд 3–5 мин дулаарч, дасгал бүрийг цэвэр техникээр хий. Дасгал бүрийн "Техник" хэсгийг нээж хар. Бодит сет, давталтаа бичих нь заавал биш. Төлөвлөснөөс бага хийсэн ч бэлтгэл тооцогдоно.',
+     'Да/Лх/Ба — хүч, Мя/Бя — cardio, Пү — mobility, Ня — амралт. Амралтыг мөрдвөл ✓.', 'Сет багасга, өвдөг дээрээс хий, алхалт хий.',
+     'Өвдөлттэй үед үргэлжлүүлэх, сэргэлтийг алгасах, техникээ алдан хурдлах. Өвдөлт мэдрэгдвэл зогс.', 'Даваа: push-ups 3×12, pike 3×8, squat 3×15, plank 3×45с.'],
+   2: ['Өдөр 60 мин: 4 хэсэг × 15 мин. N5–N4-ээс тогтвортой N4 руу.', 'Богино ч өдөр бүрийн давтлага хамгийн үр дүнтэй.',
+@@ -360,7 +369,7 @@ function home() {
+   $('tl').textContent = (end ? 'Сүүлийн өдөр' : 'Өнөөдөр') + (c ? ' · Nov ' + c : '');
+   $('tp').innerHTML = (c ? Math.round(sc(c) / 5 * 100) : 0) + '% <small>' + (c ? sc(c) : 0) + '/5</small>';
+   $('tbar').style.width = (c ? sc(c) / 5 * 100 : 0) + '%';
+-  $('today').innerHTML = c ? items(c, true) : '<div class="lk">Challenge November 1-нд эхэлнэ.</div>';
++  $('today').innerHTML = c ? items(c, false) + '<p class="lk">Нэг товшилтаар ✓. Дэлгэрэнгүй бүртгэл, гарын авлага — «Үйлдэл» цэсэнд (заавал биш).</p>' : '<div class="lk">Challenge November 1-нд эхэлнэ.</div>';
+   if (c) wireItems('today', c);
+ }
+ 
+@@ -468,7 +477,7 @@ function lk(id, q) {
+ }
+ function auto(i, o, v, t) {
+   var x = day(sel), at = x.done.indexOf(i);
+-  if (v >= t && o < t && at < 0) x.done.push(i); else if (v < t && o >= t && at > -1) x.done.splice(at, 1);
++  if (v >= t && o < t && at < 0) x.done.push(i);
+ }
+ function bind(id, get, set, num) {
+   var e = $(id); e.value = get() || '';
+@@ -512,7 +521,7 @@ function fitness() {
+       return '<div class="xr"><b>' + e[0] + '</b><span class="ex">' + e[1] + ' · амралт ' + e[2] + '</span><input class="dd" type="text" data-x="' + i + '" aria-label="' + e[0] + ' — бодит сет × давталт" placeholder="Бодит: 3×15 (заавал биш)">' +
+         dt('t' + e[0], 'Техник', '<p class="gp">' + t[0] + '</p><p class="gp"><b>Хялбар:</b> ' + t[1] + '</p><p class="gp"><b>Ахиулах:</b> ' + t[2] + '</p>') + '</div>';
+     }).join('') : '<div class="ex">' + EX[w] + '</div>') +
+-    dBtn(1, on, rec ? 'Сэргэлт дууссан' : 'Бэлтгэл дууссан', rec ? 'Төлөвлөсөн сэргэлтээ мөрдвөл 1 оноо' : '1 оноо') +
++    dBtn(1, on, rec ? 'Сэргэлт дууссан' : 'Бэлтгэл дууссан', rec ? 'Төлөвлөсөн сэргэлтээ мөрдвөл 1 оноо' : 'Төлөвлөснөөс бага ч гэсэн боломжийн хувилбараа хийсэн бол ✓') +
+     dt('fo', 'Нэмэлт бүртгэл (заавал биш)', '<label class="lb" for="fn">Нийт давталт эсвэл минут</label><input class="dd" type="number" inputmode="decimal" min="0" id="fn"><label class="lb" for="fl">Богино тэмдэглэл</label><textarea class="dd" id="fl"></textarea>') +
+     dt('a1', 'Гарын авлага', guide(1));
+   wire('fit'); wireItems('fit', sel);
+@@ -652,7 +661,33 @@ var NAV = [['Нүүр', '<path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1
+ $('nav').innerHTML = NAV.map(function (n) { return '<button aria-label="' + n[0] + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + n[1] + '</svg><span>' + n[0] + '</span></button>'; }).join('');
+ $('sub').innerHTML = SUB.map(function (n) { return '<button>' + n + '</button>'; }).join('');
+ $('sub').querySelectorAll('button').forEach(function (b, i) { b.onclick = function () { sub = i; render(); }; });
+-render();
++var FK = KEY + '-focus', F = { m: 'idle', tot: 1500, end: 0, left: 0 }, ft = 0;
++try {
++  var fs = JSON.parse(localStorage.getItem(FK) || 'null');
++  if (fs && [1500, 3000, 3600].indexOf(fs.tot) > -1 && ['idle', 'run', 'pause', 'done'].indexOf(fs.m) > -1) F = { m: fs.m, tot: fs.tot, end: +fs.end || 0, left: +fs.left || 0 };
++} catch (e) {}
++function fsave() { try { localStorage.setItem(FK, JSON.stringify(F)); } catch (e) {} }
++function fmt(n) { return pad(Math.floor(n / 60)) + ':' + pad(n % 60); }
++function fleft() { return F.m === 'run' ? Math.max(0, Math.ceil((F.end - Date.now()) / 1000)) : F.m === 'pause' ? Math.ceil(F.left / 1000) : F.tot; }
++function fshow() {
++  var l = fleft(), on = F.m === 'run' || F.m === 'pause';
++  if (F.m === 'run' && l <= 0) { F.m = 'done'; on = false; fsave(); vib(); toast('Focus дууслаа ✓'); }
++  if (F.m === 'run') { if (!ft) ft = setInterval(fshow, 500); } else { clearInterval(ft); ft = 0; }
++  $('ft').textContent = F.m === 'done' ? 'Дууслаа ✓' : fmt(l);
++  $('fsum').textContent = on ? '· ' + fmt(l) : '';
++  $('fgo').textContent = F.m === 'run' ? 'Түр зогсоох' : F.m === 'pause' ? 'Үргэлжлүүлэх' : 'Эхлэх';
++  $('ffin').hidden = !on;
++  document.querySelectorAll('#fp button').forEach(function (b) { b.className = +b.dataset.m * 60 === F.tot ? 'on' : ''; b.disabled = on; });
++}
++$('fgo').onclick = function () {
++  if (F.m === 'run') { F.left = Math.max(0, F.end - Date.now()); F.m = 'pause'; }
++  else { F.end = Date.now() + (F.m === 'pause' ? F.left : F.tot * 1000); F.m = 'run'; }
++  fsave(); fshow();
++};
++$('ffin').onclick = function () { F.m = 'idle'; fsave(); fshow(); };
++document.querySelectorAll('#fp button').forEach(function (b) { b.onclick = function () { F.tot = +b.dataset.m * 60; F.m = 'idle'; fsave(); fshow(); }; });
++document.addEventListener('visibilitychange', function () { if (!document.hidden) fshow(); });
++render(); fshow();
+ if (BAD) setTimeout(function () { alert('Хадгалсан өгөгдөл эвдэрсэн байсан тул нөөцөлсөн. Шинээр эхэллээ.'); }, 300);
+ if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function () {}); }
+ </script>
+diff --git aa/sw.js b/sw.js
+index 81c0a84..56b6647 100644
+--- aa/sw.js
++++ b/sw.js
+@@ -1,4 +1,4 @@
+-var C = 'lockin-v6', T = 3500;
++var C = 'lockin-v7', T = 3500;
+ var F = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
+ self.addEventListener('install', function (e) {
+   e.waitUntil(caches.open(C).then(function (c) {
