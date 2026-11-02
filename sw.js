@@ -1,4 +1,4 @@
-var C = 'lockin-v8', T = 3500;
+var C = 'lockin-v9', T = 3500;
 var F = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(C).then(function (c) {
@@ -15,7 +15,7 @@ self.addEventListener('fetch', function (e) {
     var t = setTimeout(function () { hit().then(send); }, T);
     fetch(e.request).then(function (r) {
       clearTimeout(t);
-      if (r.ok) { var cp = r.clone(); caches.open(C).then(function (c) { c.put(e.request, cp); }); }
+      if (r.ok) { var cp = r.clone(); caches.open(C).then(function (c) { return c.put(e.request, cp); }).catch(function () {}); }
       send(r);
     }).catch(function () { clearTimeout(t); hit().then(function (m) { send(m || Response.error()); }); });
   }));
