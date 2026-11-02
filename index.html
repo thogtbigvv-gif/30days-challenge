@@ -60,7 +60,7 @@ h2{margin:0;font-size:17px;font-weight:600;letter-spacing:-.01em}
 .head .big small,.big small{font-size:13px;font-weight:400;color:var(--mut)}
 #inst{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:var(--gap);padding:12px 14px}
 #inst .btn{margin:0}#inst .rating{text-align:left}
-#inst .x{background:none;border:0;padding:0 4px;color:var(--mut);font-size:20px;cursor:pointer}
+#inst .x{flex:none;min-width:44px;min-height:44px;margin:-6px -8px -6px 0;padding:0;background:none;border:0;color:var(--mut);font-size:20px;cursor:pointer}
 
 /* ── Hero: 30-day dial ─────────────────────────────────────────── */
 .hero{background:radial-gradient(90% 70% at 20% 0%,rgba(122,174,255,.10),transparent 70%),var(--surface);position:relative;overflow:hidden}
@@ -112,6 +112,8 @@ h2{margin:0;font-size:17px;font-weight:600;letter-spacing:-.01em}
 .t{min-width:0}
 .t b{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.08em}
 .t span{display:block;margin-top:2px;font-size:13px;color:var(--mut)}
+.item:disabled,.item:disabled .t{cursor:default}.item:disabled{opacity:.55}
+input:disabled,textarea:disabled{opacity:.55;cursor:default}
 .item.on .t{opacity:.62}
 .item.on .t b{text-decoration:line-through;text-decoration-thickness:1px}
 .ic{flex:none;width:16px;height:16px;fill:none;stroke:var(--blue);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
@@ -133,7 +135,7 @@ h2{margin:0;font-size:17px;font-weight:600;letter-spacing:-.01em}
 .day{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;aspect-ratio:1;padding:0;border:1px solid var(--line);border-radius:var(--r-sm);background:color-mix(in srgb,var(--blue) calc(var(--s)*11%),var(--surface));color:var(--ink);font-size:14px;font-weight:500;line-height:1.1;cursor:pointer;transition:transform .15s var(--ease)}
 .day small{font-size:10px;font-weight:400;color:var(--mut)}
 .day:active{transform:scale(.94)}
-.day.fut{opacity:.4;background:var(--surface)}
+.day.fut{opacity:.55;background:var(--surface)}
 .day.miss{border-style:dashed;border-color:var(--line-hi)}
 .day.part{border-color:rgba(122,174,255,.35)}
 .day.full{border-color:transparent;background:var(--grad);color:var(--on);font-weight:600}.day.full small{color:rgba(16,18,22,.72)}
@@ -177,7 +179,7 @@ summary{list-style:none}summary::-webkit-details-marker{display:none}
 summary::after{content:"";flex:none;width:7px;height:7px;margin-left:auto;border:solid currentColor;border-width:0 1.5px 1.5px 0;transform:rotate(45deg) translateY(-2px);transition:transform .25s var(--ease)}
 details[open]>summary::after{transform:rotate(-135deg) translateY(-2px)}
 details.gd{margin:0 0 8px;font-size:13px}.card>details.gd{margin:12px 0 0}.xr .gd{margin:6px 0 0}
-.gd summary{display:flex;align-items:center;min-height:40px;color:var(--blue);cursor:pointer}
+.gd summary{display:flex;align-items:center;min-height:44px;color:var(--blue);cursor:pointer}
 .gp{margin:8px 0;color:var(--mut);line-height:1.55}.gp b{color:var(--ink);font-weight:600}
 .xr{padding:12px 0;border-top:1px solid var(--line)}
 .xr b{display:block;font-size:14px;font-weight:600}
@@ -341,16 +343,20 @@ input:focus-visible,textarea:focus-visible{outline:none;border-color:var(--tint-
 var KEY = 'lockin-nov-2026';
 var S = {}, SV = 2, LAST = null, BAD = false;
 try { LAST = localStorage.getItem(KEY); } catch (e) {}
-try { S = clean(JSON.parse(LAST || '{}')); } catch (e) {
+function load(r) {
+  var o = JSON.parse(r || '{}');
+  if (!o || typeof o !== 'object' || Array.isArray(o)) throw 0;
+  return clean(o);
+}
+try { S = load(LAST); } catch (e) {
   S = {}; BAD = true;
   try { if (!localStorage.getItem(KEY + '-corrupt')) localStorage.setItem(KEY + '-corrupt', LAST); } catch (x) {}
 }
 function reload() {
   var r; try { r = localStorage.getItem(KEY); } catch (e) { return false; }
   if (r === null || r === LAST) return false;
-  try { S = clean(JSON.parse(r)); LAST = r; return true; } catch (e) { return false; }
+  try { S = load(r); LAST = r; return true; } catch (e) { return false; }
 }
-var sv = 0;
 function save() {
   S.v = SV;
   try { var j = JSON.stringify(S); localStorage.setItem(KEY, j); LAST = j; } catch (e) { toast('⚠ Хадгалж чадсангүй — Backup хий'); return; }
@@ -442,7 +448,7 @@ function calendar() {
   var h = '';
   for (var i = 0; i < (dow(1) + 6) % 7; i++) h += '<div></div>';
   for (var d = 1; d <= 30; d++) {
-    h += '<button class="day' + (d === sel ? ' sel' : '') + (d === todayN ? ' today' : '') + (d > cur ? ' fut' : sc(d) === 5 ? ' full' : sc(d) === 0 && d < cur ? ' miss' : sc(d) > 0 ? ' part' : '') + '" style="--s:' + sc(d) + '" data-d="' + d + '" aria-label="Nov ' + d + ', ' + sc(d) + '/5' + (d > cur ? ', удахгүй' : '') + '">' + d + '<small>' + sc(d) + '/5</small></button>';
+    h += '<button class="day' + (d === sel ? ' sel' : '') + (d === todayN ? ' today' : '') + (d > cur ? ' fut' : sc(d) === 5 ? ' full' : sc(d) === 0 && d < cur ? ' miss' : sc(d) > 0 ? ' part' : '') + '" style="--s:' + sc(d) + '" data-d="' + d + '"' + (d === todayN ? ' aria-current="date"' : '') + ' aria-label="Nov ' + d + ', ' + sc(d) + '/5' + (d > cur ? ', удахгүй' : '') + '">' + d + '<small>' + sc(d) + '/5</small></button>';
   }
   $('cal').innerHTML = h;
   $('cal').querySelectorAll('.day').forEach(function (b) {
@@ -483,10 +489,16 @@ function card(d, i, g) {
   return '<div class="pc"><button class="item' + (on ? ' on' : '') + '" data-i="' + i + '" aria-pressed="' + on + '"><span class="box">' + (on ? '✓' : '') + '</span><span class="t"><b>' + ICON[i] + ' ' + P[i].n + '</b><span>' + (i === 1 ? FIT[dow(d)] : PDESC[i] + ' · ' + pst(d, i)) + '</span></span></button>' + (g ? dt('h' + i, 'Гарын авлага', guide(i)) : '') + '</div>';
 }
 function items(d, g) { return ACT.map(function (i) { return card(d, i, g); }).join(''); }
+function rolled() {
+  var n = new Date();
+  if (now && n.getDate() === now.getDate() && n.getMonth() === now.getMonth() && n.getFullYear() === now.getFullYear()) return false;
+  render(); toast('Шинэ өдөр эхэллээ');
+  return true;
+}
 function wireItems(id, d) {
   $(id).querySelectorAll('.item').forEach(function (el) {
     el.onclick = function () {
-      if (d > cur) return;
+      if (rolled() || d > cur) return;
       var i = +el.dataset.i, arr = day(d).done, at = arr.indexOf(i);
       if (at > -1) arr.splice(at, 1); else { arr.push(i); vib(); POP = i; if (sc(d) === 5) { POP5 = 1; toast('5 / 5 — Lock in ✓'); } }
       save(); render();
@@ -496,7 +508,7 @@ function wireItems(id, d) {
 function panel() {
   var n = sc(sel), x = S[sel] || {};
   $('panel').innerHTML = '<div class="head"><h2>November ' + sel + ' · ' + DN[dow(sel)] + '</h2><span class="big">' + n + '/5 <small>' + Math.round(n / 5 * 100) + '%</small></span></div>' + items(sel, false) +
-    '<label class="lb" for="note">Өдрийн тэмдэглэл (заавал биш)</label><textarea id="note" placeholder="Өнөөдөр юу сайн болов?"></textarea>';
+    '<label class="lb" for="note">Өдрийн тэмдэглэл (заавал биш)</label><textarea id="note" maxlength="4000" placeholder="Өнөөдөр юу сайн болов?"></textarea>';
   $('note').value = x.note || '';
   $('note').oninput = function (e) { day(sel).note = e.target.value; save(); };
   wireItems('panel', sel);
@@ -504,9 +516,9 @@ function panel() {
 }
 
 function copy(t, btn) {
-  var o = btn.textContent;
+  if (btn._o === undefined) btn._o = btn.textContent;
   try {
-    navigator.clipboard.writeText(t).then(function () { btn.textContent = 'Хууллаа ✓'; setTimeout(function () { btn.textContent = o; }, 1500); }, function () { prompt('Гараар хуул:', t); });
+    navigator.clipboard.writeText(t).then(function () { btn.textContent = 'Хууллаа ✓'; clearTimeout(btn._t); btn._t = setTimeout(function () { btn.textContent = btn._o; btn._o = undefined; }, 1500); }, function () { prompt('Гараар хуул:', t); });
   } catch (e) { prompt('Гараар хуул:', t); }
 }
 
@@ -524,7 +536,7 @@ function test() {
   h += '<div class="rating" style="text-align:left;margin-top:6px">Ижил нөхцөл, зөв техникээр хэм. Push-up, plank-ийг хамгийн их үзүүлэлтээр бич.</div>';
   $('test').innerHTML = h;
   $('test').querySelectorAll('input').forEach(function (el) {
-    el.onchange = function () { S.m = S.m || {}; S.m[el.dataset.k] = el.value; save(); rl(); };
+    el.onchange = function () { S.m = S.m || {}; S.m[el.dataset.k] = el.value.slice(0, 10); save(); rl(); };
   });
 }
 
@@ -571,7 +583,7 @@ function home() {
 function glow() {
   var x = S[sel] || {}, g = x.gl || [0, 0, 0, 0], w = wkOf(sel), W = (S.gw || {})[w] || { c: [0, 0, 0], t: ['', '', ''] };
   $('gl').innerHTML = nv() + '<p class="sec">Glow Up · ' + g.reduce(add, 0) + ' / 4</p>' + GD.map(function (n, i) { return chk(n, 'data-g', i, g[i]); }).join('') +
-    dt('gw', 'Долоо хоногийн сануулга (Week ' + w + ')', GW.map(function (n, i) { return chk(n, 'data-w', i, W.c[i]) + '<input class="dd" type="text" data-t="' + i + '" aria-label="' + n + ' тэмдэглэл" placeholder="Тэмдэглэл (заавал биш)">'; }).join('')) +
+    dt('gw', 'Долоо хоногийн сануулга (Week ' + w + ')', GW.map(function (n, i) { return chk(n, 'data-w', i, W.c[i]) + '<input class="dd" type="text" data-t="' + i + '" maxlength="500" aria-label="' + n + ' тэмдэглэл" placeholder="Тэмдэглэл (заавал биш)">'; }).join('')) +
     dt('a0', 'Гарын авлага', guide(0));
   wire('gl');
   function gw() { S.gw = S.gw || {}; return (S.gw[w] = S.gw[w] || { c: [0, 0, 0], t: ['', '', ''] }); }
@@ -624,10 +636,11 @@ function render() {
   if (cur !== pc && sel === (pc || 1)) sel = cur || 1;
   document.querySelectorAll('.tabs button').forEach(function (b, i) {
     b.className = i === tab ? 'on' : '';
+    if (i === tab) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
     b.onclick = function () { tab = i; window.scrollTo(0, 0); render(); };
   });
   ['vH', 'vC', 'vA', 'vP'].forEach(function (id, i) { $(id).className = 'v' + (i === tab ? ' on' : ''); });
-  $('sub').querySelectorAll('button').forEach(function (b, i) { b.className = i === sub ? 'on' : ''; });
+  $('sub').querySelectorAll('button').forEach(function (b, i) { b.className = i === sub ? 'on' : ''; b.setAttribute('aria-pressed', i === sub); });
   ['gl', 'fit', 'fhist', 'jap', 'ls', 'rd'].forEach(function (id) { $(id).hidden = SP[sub].indexOf(id) < 0; });
   stats(); home(); calendar(); panel(); glow(); fitness(); japanese(); reading(); life(); summary(); test(); progress(); analytics(); rvShow(); fx(ent); frestore(fk);
 }
@@ -681,7 +694,6 @@ function bind(id, get, set, num) {
   if (num) e.onchange = function () { f(); rl(); };
 }
 function sumWk(a, b, k) { var t = 0; for (var d = a; d <= b; d++) t += (S[d] && +S[d][k]) || 0; return t; }
-function streak() { var s = 0; for (var d = cur; d >= 1; d--) { if (sc(d) >= 4) s++; else if (d !== cur) break; } return s; }
 function pbars() {
   var pc = [0, 0, 0, 0, 0, 0], el = Math.max(cur, 1);
   for (var d = 1; d <= 30; d++) done(d).forEach(function (i) { pc[i]++; });
@@ -713,11 +725,11 @@ function fitness() {
   $('fit').innerHTML = nv() + '<p class="sec">' + FIT[w] + '</p>' +
     (E ? E.map(function (e, i) {
       var t = TECH[e[0]];
-      return '<div class="xr"><b>' + e[0] + '</b><span class="ex">' + e[1] + ' · амралт ' + e[2] + '</span><input class="dd" type="text" data-x="' + i + '" aria-label="' + e[0] + ' — бодит сет × давталт" placeholder="Бодит: 3×15 (заавал биш)">' +
+      return '<div class="xr"><b>' + e[0] + '</b><span class="ex">' + e[1] + ' · амралт ' + e[2] + '</span><input class="dd" type="text" data-x="' + i + '" maxlength="100" aria-label="' + e[0] + ' — бодит сет × давталт" placeholder="Бодит: 3×15 (заавал биш)">' +
         dt('t' + e[0], 'Техник', '<p class="gp">' + t[0] + '</p><p class="gp"><b>Хялбар:</b> ' + t[1] + '</p><p class="gp"><b>Ахиулах:</b> ' + t[2] + '</p>') + '</div>';
     }).join('') : '<div class="ex">' + EX[w] + '</div>') +
     dBtn(1, on, rec ? 'Сэргэлт дууссан' : 'Бэлтгэл дууссан', rec ? 'Төлөвлөсөн сэргэлтээ мөрдвөл 1 оноо' : 'Төлөвлөснөөс бага ч гэсэн боломжийн хувилбараа хийсэн бол ✓') +
-    dt('fo', 'Нэмэлт бүртгэл (заавал биш)', '<label class="lb" for="fn">Нийт давталт эсвэл минут</label><input class="dd" type="number" inputmode="decimal" min="0" id="fn"><label class="lb" for="fl">Богино тэмдэглэл</label><textarea class="dd" id="fl"></textarea>') +
+    dt('fo', 'Нэмэлт бүртгэл (заавал биш)', '<label class="lb" for="fn">Нийт давталт эсвэл минут</label><input class="dd" type="number" inputmode="decimal" min="0" id="fn"><label class="lb" for="fl">Богино тэмдэглэл</label><textarea class="dd" id="fl" maxlength="4000"></textarea>') +
     dt('a1', 'Гарын авлага', guide(1));
   wire('fit'); wireItems('fit', sel);
   $('fit').querySelectorAll('[data-x]').forEach(function (e) {
@@ -741,7 +753,7 @@ function japanese() {
   var x = S[sel] || {}, jm = x.jm || dist(x.jp || 0), jt = 0;
   for (var d = 1; d <= 30; d++) jt += (S[d] && S[d].jp) || 0;
   $('jap').innerHTML = nv() + '<p class="sec">Japanese · ' + (x.jp || 0) + ' / 60 мин</p>' + JN.map(function (n, i) { return chk(n + ' · 15 мин', 'data-j', i, jm[i] >= 15); }).join('') +
-    dt('jo', 'Сурсан зүйлээ бүртгэх (заавал биш)', '<label class="lb" for="jg">Судалсан дүрэм</label><textarea class="dd" id="jg"></textarea><label class="lb" for="jv">Шинэ үг, kanji</label><textarea class="dd" id="jv"></textarea>') +
+    dt('jo', 'Сурсан зүйлээ бүртгэх (заавал биш)', '<label class="lb" for="jg">Судалсан дүрэм</label><textarea class="dd" id="jg" maxlength="4000"></textarea><label class="lb" for="jv">Шинэ үг, kanji</label><textarea class="dd" id="jv" maxlength="4000"></textarea>') +
     '<div style="margin-top:12px"></div>' + bar('Сарын нийт (цаг)', Math.round(jt / 6) / 10, 30) + WK.map(function (w, i) { return row('Week ' + (i + 1) + ' · Nov ' + w[0] + '–' + w[1], Math.round(sumWk(w[0], w[1], 'jp') / 6) / 10 + ' цаг'); }).join('') +
     dt('a2', 'Гарын авлага', guide(2));
   wire('jap');
@@ -765,7 +777,7 @@ function reading() {
   $('rd').innerHTML = nv() + '<p class="sec">Reading</p>' + dBtn(5, on, 'Өнөөдрийн унших дууссан', '10+ хуудас') +
     '<label class="lb" for="rpg">Өнөөдөр уншсан хуудас</label><input class="dd" type="number" inputmode="numeric" min="0" id="rpg"><div style="margin-top:12px"></div>' +
     bar('Сарын хуудас', rt, 300, rt + ' / 300+') +
-    dt('rb', 'Ном, тэмдэглэл (заавал биш)', '<label class="lb" for="bt">Номын нэр</label><input type="text" id="bt"><div class="nums"><div><label class="lb" for="btot">Нийт хуудас</label><input type="number" inputmode="numeric" min="0" id="btot"></div><div><label class="lb" for="bcur">Одоогийн хуудас</label><input type="number" inputmode="numeric" min="0" id="bcur"></div></div>' + bar('Номын явц', b.cur || 0, b.tot || 0, pr + '%') + '<label class="lb" for="rn">Нэг чухал санаа</label><textarea class="dd" id="rn"></textarea>') +
+    dt('rb', 'Ном, тэмдэглэл (заавал биш)', '<label class="lb" for="bt">Номын нэр</label><input type="text" id="bt" maxlength="200"><div class="nums"><div><label class="lb" for="btot">Нийт хуудас</label><input type="number" inputmode="numeric" min="0" id="btot"></div><div><label class="lb" for="bcur">Одоогийн хуудас</label><input type="number" inputmode="numeric" min="0" id="bcur"></div></div>' + bar('Номын явц', b.cur || 0, b.tot || 0, pr + '%') + '<label class="lb" for="rn">Нэг чухал санаа</label><textarea class="dd" id="rn" maxlength="4000"></textarea>') +
     dt('a5', 'Гарын авлага', guide(5));
   wire('rd'); wireItems('rd', sel);
   bind('bt', function () { return b.t; }, function (v) { bk('t', v.slice(0, 200)); });
@@ -824,7 +836,7 @@ $('rf').onchange = function () {
 };
 $('rs').onclick = function () { var t = prompt('Backup-аа энд paste хий'); if (t) applyBackup(t); };
 
-function vib() { try { navigator.vibrate && navigator.vibrate(12); } catch (e) {} }
+function vib() { try { if (navigator.vibrate && (!navigator.userActivation || navigator.userActivation.hasBeenActive)) navigator.vibrate(12); } catch (e) {} }
 var tt = 0;
 function toast(m) { var t = $('toast'); t.textContent = m; t.className = 'toast on'; clearTimeout(tt); tt = setTimeout(function () { t.className = 'toast'; }, 1900); }
 var tx = 0, ty = 0;
@@ -872,7 +884,7 @@ function fshow() {
   $('fsum').textContent = on ? '· ' + fmt(l) : '';
   $('fgo').textContent = F.m === 'run' ? 'Түр зогсоох' : F.m === 'pause' ? 'Үргэлжлүүлэх' : 'Эхлэх';
   $('ffin').hidden = !on;
-  document.querySelectorAll('#fp button').forEach(function (b) { b.className = +b.dataset.m * 60 === F.tot ? 'on' : ''; b.disabled = on; });
+  document.querySelectorAll('#fp button').forEach(function (b) { b.className = +b.dataset.m * 60 === F.tot ? 'on' : ''; b.setAttribute('aria-pressed', +b.dataset.m * 60 === F.tot); b.disabled = on; });
 }
 $('fgo').onclick = function () {
   if (F.m === 'run') { F.left = Math.max(0, F.end - Date.now()); F.m = 'pause'; }
@@ -882,6 +894,7 @@ $('fgo').onclick = function () {
 $('ffin').onclick = function () { F.m = 'idle'; fsave(); fshow(); };
 document.querySelectorAll('#fp button').forEach(function (b) { b.onclick = function () { F.tot = +b.dataset.m * 60; F.m = 'idle'; fsave(); fshow(); }; });
 document.addEventListener('visibilitychange', function () { if (!document.hidden) fshow(); });
+setInterval(function () { if (!document.hidden) rolled(); }, 30000);
 render(); fshow();
 if (BAD) setTimeout(function () { alert('Хадгалсан өгөгдөл эвдэрсэн байсан тул нөөцөлсөн. Шинээр эхэллээ.'); }, 300);
 if ('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(function () {}); }
