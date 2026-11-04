@@ -56,6 +56,10 @@ Each pillar contributes one point toward the daily score. One tap marks a pillar
 
 An optional Deep Focus timer (25, 50 or 60 minutes) is available in the app. It does not affect the score.
 
+## Adaptive Habit System
+
+Every pillar has three optional completion levels: **Minimum** (1 pt), **Standard** (2 pts) and **High** (3 pts). Picking any level marks the pillar done, so a Minimum day still counts toward 5/5. Tap the selected level again to undo. The 1–2–3 points are shown separately on the Progress tab and are never added to the 150-point score. A pillar ticked without a level counts as Standard.
+
 ## Performance Levels
 
 | Total Score | Share of 150 | Performance |
