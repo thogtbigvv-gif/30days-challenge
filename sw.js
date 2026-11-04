@@ -1,4 +1,4 @@
-var C = 'lockin-v9', T = 3500;
+var C = 'lockin-v10', T = 3500;
 var F = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(C).then(function (c) {
