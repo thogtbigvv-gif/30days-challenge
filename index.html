@@ -116,6 +116,12 @@ h2{margin:0;font-size:17px;font-weight:600;letter-spacing:-.01em}
 input:disabled,textarea:disabled{opacity:.55;cursor:default}
 .item.on .t{opacity:.62}
 .item.on .t b{text-decoration:line-through;text-decoration-thickness:1px}
+/* Adaptive levels */
+.lv{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;padding:0 12px}
+.lv button{min-height:40px;padding:0 4px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:var(--r-sm);color:var(--mut);font-size:12px;font-weight:600;letter-spacing:.02em;cursor:pointer;transition:background-color .2s var(--ease),border-color .2s var(--ease),color .2s var(--ease)}
+.lv button.on{background:var(--tint);border-color:var(--tint-line);color:var(--ink)}
+.lv button:disabled{opacity:.55;cursor:default}
+.lvh{padding:6px 16px 12px;font-size:12px;line-height:1.35;color:var(--mut)}
 .ic{flex:none;width:16px;height:16px;fill:none;stroke:var(--blue);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .box{position:relative;flex:none;display:grid;place-items:center;width:28px;height:28px;border:1.5px solid var(--line-hi);border-radius:9px;font-size:0;color:transparent;transition:background-color .2s,border-color .2s}
 .item.on .box{border-color:transparent;background:var(--grad)}
@@ -341,7 +347,7 @@ input:focus-visible,textarea:focus-visible{outline:none;border-color:var(--tint-
 
 <script>
 var KEY = 'lockin-nov-2026';
-var S = {}, SV = 2, LAST = null, BAD = false;
+var S = {}, SV = 3, LAST = null, BAD = false;
 try { LAST = localStorage.getItem(KEY); } catch (e) {}
 function load(r) {
   var o = JSON.parse(r || '{}');
@@ -430,6 +436,30 @@ function sc(d) { return done(d).filter(function (i) { return i !== 3; }).length;
 function day(d) { S[d] = S[d] || { done: [] }; S[d].done = S[d].done || []; return S[d]; }
 function addDone(i) { var x = day(sel); if (x.done.indexOf(i) < 0) x.done.push(i); }
 
+// Adaptive levels: S[d].lv = { pillarIndex: 1|2|3 } (1 Minimum, 2 Standard, 3 High). Separate from S[d].done.
+var LV_N = ['Minimum', 'Standard', 'High'];
+var LV_T = {
+  0: ['Үндсэн арчилгаа: нүүр угаах, шүд, SPF', 'Өдрийн арчилгааны routine', 'Бүтэн routine + нэмэлт grooming'],
+  1: ['5–10 мин хөнгөн дасгал эсвэл багасгасан бэлтгэл', '', 'Төлөвлөсөн бэлтгэл + нэмэлт 1 сет'],
+  2: ['10–15 мин', '60 мин · 4 хэсэг', '75–90 мин'],
+  4: ['Хамгийн чухал үндсэн routine-ууд', 'Өдрийн routine (6-аас 5)', '6 routine бүгд'],
+  5: ['5 хуудас', '10+ хуудас', '20+ хуудас']
+};
+function lvOf(d, i) { var l = S[d] && S[d].lv; return (l && l[i]) || 0; }
+function lvSet(d, i, v) {
+  var x = day(d); x.lv = x.lv || {};
+  if (v) x.lv[i] = v; else delete x.lv[i];
+  if (!Object.keys(x.lv).length) delete x.lv;
+}
+function lvTxt(d, i, v) { return i === 1 && v === 2 ? FIT[dow(d)] : LV_T[i][v - 1]; }
+function pts(d) { var t = 0; done(d).forEach(function (i) { if (i !== 3) t += lvOf(d, i) || 2; }); return t; }
+function lvRow(d, i) {
+  var c = lvOf(d, i);
+  return '<div class="lv" role="group" aria-label="' + P[i].n + ' — түвшин">' + [1, 2, 3].map(function (v) {
+    return '<button data-pv="' + i + '-' + v + '" aria-pressed="' + (c === v) + '" title="' + esc(lvTxt(d, i, v)) + '"' + (c === v ? ' class="on"' : '') + '>' + LV_N[v - 1] + '</button>';
+  }).join('') + '</div><div class="lvh">' + (c ? LV_N[c - 1] + ' — ' + esc(lvTxt(d, i, c)) : 'Завгүй өдөр — ' + esc(lvTxt(d, i, 1))) + '</div>';
+}
+
 function lvl(p) { return p >= 0.9 ? 'Маш сайн' : p >= 0.8 ? 'Сайн' : p >= 0.65 ? 'Тогтвортой' : 'Үргэлжлүүл'; }
 function stats() {
   var tot = 0, perf = 0;
@@ -486,7 +516,7 @@ function pst(d, i) {
 }
 function card(d, i, g) {
   var on = done(d).indexOf(i) > -1;
-  return '<div class="pc"><button class="item' + (on ? ' on' : '') + '" data-i="' + i + '" aria-pressed="' + on + '"><span class="box">' + (on ? '✓' : '') + '</span><span class="t"><b>' + ICON[i] + ' ' + P[i].n + '</b><span>' + (i === 1 ? FIT[dow(d)] : PDESC[i] + ' · ' + pst(d, i)) + '</span></span></button>' + (g ? dt('h' + i, 'Гарын авлага', guide(i)) : '') + '</div>';
+  return '<div class="pc"><button class="item' + (on ? ' on' : '') + '" data-i="' + i + '" aria-pressed="' + on + '"><span class="box">' + (on ? '✓' : '') + '</span><span class="t"><b>' + ICON[i] + ' ' + P[i].n + '</b><span>' + (i === 1 ? FIT[dow(d)] : PDESC[i] + ' · ' + pst(d, i)) + '</span></span></button>' + lvRow(d, i) + (g ? dt('h' + i, 'Гарын авлага', guide(i)) : '') + '</div>';
 }
 function items(d, g) { return ACT.map(function (i) { return card(d, i, g); }).join(''); }
 function rolled() {
@@ -500,7 +530,16 @@ function wireItems(id, d) {
     el.onclick = function () {
       if (rolled() || d > cur) return;
       var i = +el.dataset.i, arr = day(d).done, at = arr.indexOf(i);
-      if (at > -1) arr.splice(at, 1); else { arr.push(i); vib(); POP = i; if (sc(d) === 5) { POP5 = 1; toast('5 / 5 — Lock in ✓'); } }
+      if (at > -1) { arr.splice(at, 1); lvSet(d, i, 0); } else { arr.push(i); vib(); POP = i; if (sc(d) === 5) { POP5 = 1; toast('5 / 5 — Lock in ✓'); } }
+      save(); render();
+    };
+  });
+  $(id).querySelectorAll('.lv button').forEach(function (el) {
+    el.onclick = function () {
+      if (rolled() || d > cur) return;
+      var q = el.dataset.pv.split('-'), i = +q[0], v = +q[1], x = day(d), at = x.done.indexOf(i);
+      if (lvOf(d, i) === v) { lvSet(d, i, 0); if (at > -1) x.done.splice(at, 1); }
+      else { if (at < 0) { x.done.push(i); vib(); POP = i; if (sc(d) === 5) { POP5 = 1; toast('5 / 5 — Lock in ✓'); } } lvSet(d, i, v); }
       save(); render();
     };
   });
@@ -512,7 +551,7 @@ function panel() {
   $('note').value = x.note || '';
   $('note').oninput = function (e) { day(sel).note = e.target.value; save(); };
   wireItems('panel', sel);
-  lk('panel', 'textarea,.item');
+  lk('panel', 'textarea,.item,.lv button');
 }
 
 function copy(t, btn) {
@@ -611,12 +650,14 @@ function life() {
 }
 
 function summary() {
-  var t = 0, pf = 0;
-  for (var d = 1; d <= 30; d++) { t += sc(d); if (sc(d) === 5) pf++; }
-  $('ps').innerHTML = '<p class="sec">Нийт ахиц</p>' + bar('Нийт оноо', t, 150, t + ' / 150 · ' + Math.round(t / 1.5) + '%') + '<div class="rating" style="text-align:left">' + $('rating').textContent + '</div>' + row('Төгс өдөр (5/5)', pf + ' / ' + cur + ' өдөр');
+  var t = 0, pf = 0, ap = 0, cn = [0, 0, 0];
+  for (var d = 1; d <= 30; d++) { t += sc(d); if (sc(d) === 5) pf++; ap += pts(d); done(d).forEach(function (i) { if (i !== 3) cn[(lvOf(d, i) || 2) - 1]++; }); }
+  $('ps').innerHTML = '<p class="sec">Нийт ахиц</p>' + bar('Нийт оноо', t, 150, t + ' / 150 · ' + Math.round(t / 1.5) + '%') + '<div class="rating" style="text-align:left">' + $('rating').textContent + '</div>' + row('Төгс өдөр (5/5)', pf + ' / ' + cur + ' өдөр') +
+    '<p class="sec" style="margin-top:14px">Adaptive түвшин · 1–2–3 оноо</p>' + row('Adaptive оноо', ap) + row('Minimum / Standard / High', cn.join(' / ')) +
+    '<div class="rating" style="text-align:left">/150 онооноос тусдаа. Түвшин сонгоогүй ✓ нь Standard гэж тооцогдоно.</div>';
 }
 
-var FA = ['data-i', 'data-g', 'data-l', 'data-j', 'data-w', 'data-t', 'data-x', 'data-d', 'data-n', 'data-k'];
+var FA = ['data-i', 'data-g', 'data-l', 'data-j', 'data-w', 'data-t', 'data-x', 'data-d', 'data-n', 'data-k', 'data-pv'];
 function fkey() {
   var a = document.activeElement;
   if (!a || a === document.body || a.closest('.tabs,.sub')) return null;
@@ -654,6 +695,11 @@ function clean(o) {
     var x = o[d]; if (!x || typeof x !== 'object') continue;
     var y = { done: [] };
     (Array.isArray(x.done) ? x.done : []).forEach(function (i) { i = +i; if (i >= 0 && i <= 5 && i % 1 === 0 && y.done.indexOf(i) < 0) y.done.push(i); });
+    if (x.lv && typeof x.lv === 'object' && !Array.isArray(x.lv)) {
+      var q = {}, any = 0;
+      [0, 1, 2, 4, 5].forEach(function (i) { var v = +x.lv[i]; if (v >= 1 && v <= 3 && v % 1 === 0 && y.done.indexOf(i) > -1) { q[i] = v; any = 1; } });
+      if (any) y.lv = q;
+    }
     ['jp', 'pg', 'fn'].forEach(function (k) { if (x[k] !== undefined) y[k] = n(x[k]); });
     ['note', 'jg', 'jv', 'rn', 'fl', 'pn'].forEach(function (k) { if (x[k]) y[k] = s(x[k]); });
     if (Array.isArray(x.jm)) y.jm = [0, 1, 2, 3].map(function (i) { return n(x.jm[i]); });
